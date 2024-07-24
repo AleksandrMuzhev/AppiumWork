@@ -1,0 +1,67 @@
+package driver;
+//Взаимодействуем с драйвером через методы
+
+import static config.ConfigReader.platformAndroid;
+import static config.ConfigReader.platformIOS;
+
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
+
+import io.appium.java_client.MobileBy;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
+
+/**
+ * Класс помощник для Page страниц
+ */
+public class EmulatorHelper extends EmulatorDriver { //Наследуемся от класса EmulatorDriver, поэтому есть доступ к переменной driver
+    /**
+     * Нажимает кнопку назад
+     */
+    public static void goBack() { //Метод для перехода назад
+        driver.navigate().back();
+    }
+
+    /**
+     * Закрывает клавиатуру если она есть
+     */
+    public static void closeKeyBoard() { //Метод для закрытия клавиатуры
+        if (platformAndroid) {
+            if (((AndroidDriver<?>) driver).isKeyboardShown()) { //Если клавиатура открыта, то далее закрываем ее
+                driver.hideKeyboard();
+            }
+        } else if (platformIOS) {
+            if (((IOSDriver<?>) driver).isKeyboardShown()) { //Если клавиатура открыта, то далее закрываем ее
+                driver.hideKeyboard();
+            }
+        }
+    }
+
+    /**
+     * Вводит текст и нажимает Enter (Enter при необходимости; можно также и другие команды подставить)
+     *
+     * @param element поле для ввода
+     * @param text    текст
+     */
+    public static void sendKeysAndFind(SelenideElement element, String text) { //Метод для ввода данных в поля
+        element.should(Condition.visible).sendKeys(text);
+//        driver.pressKey(new KeyEvent(AndroidKey.ENTER)); //Вызываем метод для нажатия кнопки ENTER
+    }
+
+    /**
+     * Листает к элементу по его тексту и нажимает на элемент
+     *
+     * @param text текст на элементе
+     */
+    public static void androidScrollToAnElementByText(String text) { // Метод для скроллинга к методу, который определен по тексту
+        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
+                ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
+                ".textContains(\"" + text + "\").instance(0))";
+        if (platformAndroid) {
+            ((AndroidDriver<?>)driver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+        } else if (platformIOS) {
+            ((IOSDriver<?>)driver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+        }
+    }
+
+}

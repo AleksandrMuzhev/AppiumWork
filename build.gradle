@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '2.9.6'
+}
+
+group = 'ru.ittechnology'
+version = '1.0-SNAPSHOT'
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+def allureVersion = '2.19.0', //Для урегулирования конфликта версий в зависимостях в случае их доп-я
+    junitVersion = '5.8.2',
+    slf4jVersion = '1.7.32',
+    cucumberVersion = '7.18.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation "com.github.romankh3:image-comparison:4.4.0"
+    //библиотека для сравнения скриншотов: эскиз и тот, что на экране (например, сравнение верстки)
+    testImplementation(
+            "io.qameta.allure:allure-junit5:$allureVersion", //для описания шагов в allure
+            "com.codeborne:selenide:5.25.0", //для использования инструментов взаимодействия в тестах + для использования PageObject
+            "io.qameta.allure:allure-selenide:$allureVersion", //для логирования действий в степах (например, клик -> получили скриншот)
+            "io.appium:java-client:7.6.0", //для подключения к appium-server и настройки связи с вашим кодом
+            "org.aeonbits.owner:owner:1.0.12", //для чтения файла с расширением .properties и применения нужных настроек в проекте (чтение значения по ключу)
+            "org.junit.jupiter:junit-jupiter-api:$junitVersion", //тестовые аннотации (тестовый фреймворк)
+            "io.cucumber:cucumber-junit-platform-engine:$cucumberVersion",
+            "org.junit.platform:junit-platform-suite:1.10.0"
+    )
+    testRuntimeOnly(
+            "org.slf4j:slf4j-simple:$slf4jVersion", //для логирования
+            "org.junit.jupiter:junit-jupiter-engine:$junitVersion" //для работы всех тестов
+    )
+
+    implementation "io.cucumber:cucumber-java:$cucumberVersion"
+}
+
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        lifecycle {
+            events "failed"
+            exceptionFormat "short"
+        }
+    }
+}

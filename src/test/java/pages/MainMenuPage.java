@@ -2,9 +2,10 @@ package pages;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static config.ConfigReader.arnica;
+import static config.ConfigReader.sqns;
 import static driver.EmulatorHelper.goBack;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
@@ -17,7 +18,7 @@ import io.qameta.allure.Step;
 public class MainMenuPage extends StartPage {
 
     /**
-     * Элементы TabBar (в нижней части) для Android Арника
+     * Элементы TabBar (в нижней части) для Android (Все продукты)
      */
     private static final ElementsCollection namesBtnTabBar = $$(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup"));
     private static final ElementsCollection iconBtnTabBar = $$(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]"));
@@ -28,23 +29,30 @@ public class MainMenuPage extends StartPage {
     private static final SelenideElement btnMainTabBar = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.Button[5]"));
 
     /**
-     * Элементы всплыющего попапа для оценки качества для Android Арника
+     * Элементы всплыющего попапа для оценки качества для Android (Все продукты)
      */
     private static final SelenideElement adPopUpRate = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]"));
-    private static final SelenideElement btnCloseRate = $(MobileBy.xpath("//android.widget.TextView[@text=\"Напомнить позже\"]"));
+    private static final SelenideElement textTitlePopupRate = $(MobileBy.xpath("//android.widget.TextView[@text=\"Пожалуйста, оцените наше приложение\"]"));
     private static final SelenideElement ErrorCritical = $(MobileBy.xpath("//android.widget.TextView[@text=\"Что-то пошло не так...\"]"));
     private static final SelenideElement resetButton = $(MobileBy.AccessibilityId("Сбросить ошибку"));
+    private static final SelenideElement frameLayout = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout"));
+    /**
+     * Элементы всплыющего попапа для оценки качества для Android Арника
+     */
+    private static final SelenideElement btnCloseRateA = $(MobileBy.xpath("//android.widget.TextView[@text=\"Напомнить позже\"]"));
+    /**
+     * Элементы всплыющего попапа для оценки качества для Android SQNS
+     */
+    private static final SelenideElement btnCloseRateS = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Напомнить позже\"]"));
 
     /**
-     * Элементы бокового главного меню приложения для Android Арника
+     * Элементы бокового главного меню приложения для Android (Все продукты)
      */
     private static final SelenideElement btnBackMain = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.widget.Button"));
     private static final SelenideElement titleSalonsAddressMain = $(MobileBy.xpath("//android.view.ViewGroup[@content-desc=\"Розалия, Ленина, 5\"]"));
     private static final SelenideElement btnSalonsMain = $(MobileBy.xpath("//android.widget.TextView[@text=\"\uDB81\uDCE1\"]"));
-
     private static final SelenideElement titleListMain = $(MobileBy.xpath("//android.widget.TextView[@text=\"Меню\"]"));
     private static final SelenideElement btnMenuProfileMain = $(MobileBy.xpath("//android.view.ViewGroup[@content-desc=\"НА\"]"));
-
     private static final ElementsCollection listMainSections = $$(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup"));
     private static final SelenideElement sectionStatisticMain = $(MobileBy.AccessibilityId("Статистика"));
     private static final SelenideElement sectionScheduleMain = $(MobileBy.AccessibilityId("Расписание"));
@@ -61,18 +69,23 @@ public class MainMenuPage extends StartPage {
     private static final SelenideElement sectionSupportMain = $(MobileBy.AccessibilityId("Техподдержка"));
     private static final SelenideElement sectionAboutMain = $(MobileBy.AccessibilityId("О приложении"));
 
-
+    /**
+     * Геттеры для обращения к полям класса из тестов
+     */
+    public static SelenideElement getBtnCloseRate() {
+        if (arnica) {
+            return btnCloseRateA;
+        } else if (sqns) {
+            return btnCloseRateS;
+        }
+        return null;
+    }
 
     @Step("Закрываем открывшееся всплывающее окно")
     public static void closePopUpMain() {
         if (adPopUpRate.exists()) {
             goBack();
         }
-    }
-
-    @Step("Переходим в Расписание на главной странице")
-    public static void goToSchedule() {
-        btnScheduleTabBar.should(Condition.visible).click();
     }
 
     @Step("Сбрасываем критическую ошибку Что-то пошло не так")
@@ -83,28 +96,4 @@ public class MainMenuPage extends StartPage {
         return new MainMenuPage();
     }
 
-
-//    @Step("Открываем каталог в нижнем меню")
-//    public StartPage openCatalog() {
-//        catalogButton.should(Condition.visible).click();
-//        return new StartPage();
-//    }
-
-//    @Step("Проверяем названия категорий в центре экрана {texts}")
-//    public MainPage checkCategoriesHasTexts(List<String> texts) {
-//        androidScrollToAnElementByText(texts.get(0));
-//        categories.should(CollectionCondition.size(10));
-//        categories.should(CollectionCondition.textsInAnyOrder(texts));
-//        return this;
-//    }
-
-//    @Step("Проверяем, что кнопка меню 'Главное Меню' выделена")
-//    public void checkMainMenuButtonIsSelected() {
-//        mainMenuIcon.should(Condition.selected);
-//    }
-//
-//    @Step("Проверяем, что кнопка меню 'Главное Меню' не выделена")
-//    public void checkMainMenuButtonIsNotSelected() {
-//        mainMenuIcon.should(Condition.not(Condition.selected));
-//    }
 }

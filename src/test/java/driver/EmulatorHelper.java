@@ -1,11 +1,17 @@
 package driver;
 //Взаимодействуем с драйвером через методы
 
+import static com.codeborne.selenide.Selenide.actions;
 import static config.ConfigReader.platformAndroid;
 import static config.ConfigReader.platformIOS;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+
+import org.openqa.selenium.WebElement;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.android.AndroidDriver;
@@ -58,10 +64,31 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
                 ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
                 ".textContains(\"" + text + "\").instance(0))";
         if (platformAndroid) {
-            ((AndroidDriver<?>)driver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+            ((AndroidDriver<?>) driver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
         } else if (platformIOS) {
-            ((IOSDriver<?>)driver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+            ((IOSDriver<?>) driver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
         }
+    }
+
+    /**
+     * Имитирует свайп для обновления страницы (потянуть вниз).
+     * Для использования передаем: xpath-локатор элемента в параметры; направление: right, left, down, up; процент смахивания относительно ширины или высоты
+     */
+    public static void swipeToRefresh(SelenideElement element, String direction, int percent) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("elementId", element.should(Condition.visible).getId());
+        params.put("percentage", percent);
+        params.put("direction", direction);
+
+        driver.executeScript("gesture: swipe", params);
+    }
+
+    /**
+     * Метод для клика с задержкой
+     */
+    public static void slowClick(WebElement element) {
+        actions().moveToElement(element).pause(5000).click().perform(); // Задержка в 5 секунд (5000 миллисекунд)
     }
 
 }

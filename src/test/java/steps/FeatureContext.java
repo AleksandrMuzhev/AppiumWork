@@ -29,7 +29,7 @@ public class FeatureContext extends BaseTest {
     }
 
     @ParameterType(".*")
-    public String string(String value) {
+    public String customParameter(String value) {
         return value;
     }
 

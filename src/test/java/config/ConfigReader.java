@@ -24,12 +24,12 @@ public class ConfigReader {
      */
     private static boolean isArnicaApp() {
         String appPath = ConfigReader.emulatorConfig.app();
-        return appPath.contains("arnicaStand11.apk");
+        return appPath.contains("arnica11.apk");
     }
 
     private static boolean isSqnsApp() {
         String appPath = ConfigReader.emulatorConfig.app();
-        return appPath.contains("sqnsEditVisit20240718.apk");
+        return appPath.contains("sqns12.apk");
     }
 
     /**

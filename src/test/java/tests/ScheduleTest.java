@@ -2,21 +2,23 @@ package tests;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
+import static driver.EmulatorHelper.androidScrollToAnElementByText;
 import static pages.AuthPage.authRegisterDate;
 import static pages.MainMenuPage.closePopUpMain;
-import static pages.MainMenuPage.goToSchedule;
 import static pages.SchedulePage.clickOnAddEmployeeInBtnPlus;
 import static pages.SchedulePage.clickOnNewVisitInBtnPlus;
 import static pages.SchedulePage.createVisitClickOnFreedomTime;
 import static pages.SchedulePage.getBtnSelectDayNextMonth;
 import static pages.SchedulePage.getBtnSelectDayPrevMonth;
-import static pages.SchedulePage.getBtnSwitchCurrentDay;
+import static pages.SchedulePage.getBtnSwitchCurrentDaySchedule;
+import static pages.SchedulePage.getMainContentForSwipe;
 import static pages.SchedulePage.getMondayText;
 import static pages.SchedulePage.getTextCabinet;
 import static pages.SchedulePage.getTitleSelectEmployeeSchedule;
 import static pages.SchedulePage.goToConfigFilterScheduleSelectCabinets;
 import static pages.SchedulePage.nextSwitchCalendar;
 import static pages.SchedulePage.prevSwitchCalendar;
+import static pages.SchedulePage.updateScheduleSwipe;
 import static pages.SchedulePage.viewScheduleByWeek;
 import static pages.VisitPage.getTitleCalendarVisit;
 import static pages.VisitPage.getTitleNewVisitText;
@@ -36,19 +38,19 @@ public class ScheduleTest extends BaseTest {
     public void setUp() {
         authRegisterDate();
         closePopUpMain();
-        goToSchedule();
+        androidScrollToAnElementByText("Расписание");
     }
 
     @Description("Переключаем на странице расписания дату на месяц назад и на месяц вперед")
     @Test
-    public void testSwitchDatePrevAndNext() {
-        String expectedPrev = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("E dd MMMM uuuu", new Locale("ru")));
-        String expectedNext = LocalDate.now().plusMonths(1).format(DateTimeFormatter.ofPattern("E dd MMMM uuuu", new Locale("ru")));
+    public void testSwitchScheduleDatePrevAndNextMonth() {
+        String expectedPrev = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("EEE d MMMM uuuu", new Locale("ru")));
+        String expectedNext = LocalDate.now().plusMonths(1).format(DateTimeFormatter.ofPattern("EEE d MMMM uuuu", new Locale("ru")));
 
         prevSwitchCalendar();
         getBtnSelectDayPrevMonth().should(visible).shouldHave(exactText(expectedPrev));
 
-        getBtnSwitchCurrentDay().click();
+        getBtnSwitchCurrentDaySchedule().click();
         nextSwitchCalendar();
         getBtnSelectDayNextMonth().should(visible).shouldHave(exactText(expectedNext));
     }
@@ -87,9 +89,18 @@ public class ScheduleTest extends BaseTest {
 
     @Description("Проверяем, что расписание по кабинетам присутстует")
     @Test
-    public void testCheckScheduleOnCabinetsIsDisplayed() {
+    public void testScheduleOnCabinetsIsDisplayed() {
         goToConfigFilterScheduleSelectCabinets();
 
         getTextCabinet().should(visible).shouldHave(exactText("Кабинет"));
     }
+
+    @Description("Проверяем обновление расписание свайпом")
+    @Test
+    public void testUpdateScheduleSwipe() {
+        updateScheduleSwipe();
+
+        getMainContentForSwipe().shouldBe(visible);
+    }
+
 }

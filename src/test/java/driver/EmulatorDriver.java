@@ -81,7 +81,6 @@ public class EmulatorDriver implements WebDriverProvider { //Имплемент�
     @Nonnull
     @Override
     public WebDriver createDriver(DesiredCapabilities desiredCapabilities) {
-
         if (platformAndroid) {
             initPackageAndActivity();
             desiredCapabilities = new DesiredCapabilities();
@@ -95,7 +94,7 @@ public class EmulatorDriver implements WebDriverProvider { //Имплемент�
             desiredCapabilities.setCapability("automationName", AUTOMATION_NAME);
             driver = new AndroidDriver<>(getUrl(), desiredCapabilities);
         } else if (platformIOS) {
-            // Аналогино настройки для IOS
+            // Аналогично настройки для IOS
         }
 
         return driver;

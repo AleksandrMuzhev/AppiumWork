@@ -162,14 +162,12 @@ public class SchedulePage {
         LocalDate endOfWeek = currentDate.plusDays(7 - dayOfWeek); // воскресенье
 
         DateTimeFormatter formatterFrom = DateTimeFormatter.ofPattern("d MMMM", new Locale("ru"));
-        DateTimeFormatter formatterTo = DateTimeFormatter.ofPattern("d MMMM uuuu", new Locale("ru"));
+        DateTimeFormatter formatterTo = DateTimeFormatter.ofPattern("dd MMMM uuuu", new Locale("ru"));
 
         String formattedStartOfWeek = startOfWeek.format(formatterFrom);
         String formattedEndOfWeek = endOfWeek.format(formatterTo);
 
-        String result = String.format("%s - %s", formattedStartOfWeek, formattedEndOfWeek);
-        System.out.println(result);
-        return result;
+        return String.format("%s - %s", formattedStartOfWeek, formattedEndOfWeek);
     }
 
     /**

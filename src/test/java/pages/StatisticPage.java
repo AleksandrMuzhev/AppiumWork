@@ -6,6 +6,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static config.ConfigReader.arnica;
 import static config.ConfigReader.sqns;
 import static driver.EmulatorHelper.swipeToRefresh;
+import static helper.Constants.MONTH_NAMES;
 import static pages.SchedulePage.generateRangeDateCurrentWeek;
 
 import com.codeborne.selenide.ElementsCollection;
@@ -33,14 +34,17 @@ public class StatisticPage {
     private static final SelenideElement titleCashboxStatistic = $(MobileBy.xpath("//android.widget.TextView[@text=\"Кассы\"]"));
     private static final SelenideElement titleSalaryEmployees = $(MobileBy.xpath("(//android.widget.TextView[@text=\"Зарплата сотрудников\"])[1]"));
     private static final SelenideElement titleMySalary = $(MobileBy.xpath("//android.widget.TextView[@text=\"Моя зарплата\"]"));
+    //Текст на кнопке текущего дня
     private static final SelenideElement textBtnSelectCurrentDay = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.SHORT, new Locale("ru")).toUpperCase().substring(0, 1) +
             LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.SHORT, new Locale("ru")).toLowerCase().substring(1) + " " +
             LocalDate.now().getDayOfMonth() + " " +
             LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, new Locale("ru")) + " " +
             LocalDate.now().getYear() + "\"]"));
+    //Текст на кнопке текущей недели
     private static final SelenideElement textBtnSelectCurrentWeek = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + generateRangeDateCurrentWeek() + "\"]"));
+    //Текст на кнопке текущего месяца с годом
     private static final SelenideElement textBtnSelectCurrentMonth = $(MobileBy.xpath("//android.widget.TextView[@text=\"" +
-            LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, new Locale("ru")) + " " +
+            MONTH_NAMES[LocalDate.now().getMonth().getValue() - 1] + " " +
             LocalDate.now().getYear() + "\"]"));
 
     private static final SelenideElement btnSelectPrevDay = $(MobileBy.AccessibilityId(generateDayOfWeekForPreviousDay(LocalDate.now(), new Locale("ru")) + " " +

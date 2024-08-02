@@ -3,6 +3,7 @@ package tests;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static driver.EmulatorHelper.slowClick;
+import static helper.Constants.MONTH_NAMES;
 import static pages.AuthPage.authRegisterDate;
 import static pages.MainMenuPage.closePopUpMain;
 import static pages.SchedulePage.generateRangeDateCurrentWeek;
@@ -56,7 +57,7 @@ public class StatisticTest extends BaseTest {
     public void testSwitchDateStatisticDayOrWeekOrMonth() {
         String expectedCurrentDateBtnOfDay = LocalDate.now().format(DateTimeFormatter.ofPattern("EEE d MMMM uuuu", new Locale("ru")));
         String expectedCurrentDateBtnOfWeek = generateRangeDateCurrentWeek();
-        String expectedCurrentDateBtnOfMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM uuuu", new Locale("ru")));
+        String expectedCurrentDateBtnOfMonth = MONTH_NAMES[LocalDate.now().getMonth().getValue() - 1] + " " + LocalDate.now().getYear();
 
         getTextBtnSelectCurrentDay().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfDay));
         getMainStatisticForSwipe().exists();

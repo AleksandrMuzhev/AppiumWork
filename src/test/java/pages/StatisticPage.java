@@ -1,20 +1,20 @@
 package pages;
 
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static config.ConfigReader.arnica;
 import static config.ConfigReader.sqns;
 import static driver.EmulatorHelper.swipeToRefresh;
-import static helper.Constants.MONTH_NAMES;
-import static pages.SchedulePage.generateRangeDateCurrentWeek;
+import static helper.DateHelper.dateOfDayNext;
+import static helper.DateHelper.dateOfDayPrev;
+import static helper.DateHelper.dayOfMonthCurrent;
+import static helper.DateHelper.monthWithYear;
+import static helper.DateHelper.rangeDateCurrentWeek;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-
-import java.time.LocalDate;
-import java.time.format.TextStyle;
-import java.util.Locale;
 
 import io.appium.java_client.MobileBy;
 import io.qameta.allure.Step;
@@ -35,26 +35,14 @@ public class StatisticPage {
     private static final SelenideElement titleSalaryEmployees = $(MobileBy.xpath("(//android.widget.TextView[@text=\"Зарплата сотрудников\"])[1]"));
     private static final SelenideElement titleMySalary = $(MobileBy.xpath("//android.widget.TextView[@text=\"Моя зарплата\"]"));
     //Текст на кнопке текущего дня
-    private static final SelenideElement textBtnSelectCurrentDay = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.SHORT, new Locale("ru")).toUpperCase().substring(0, 1) +
-            LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.SHORT, new Locale("ru")).toLowerCase().substring(1) + " " +
-            LocalDate.now().getDayOfMonth() + " " +
-            LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, new Locale("ru")) + " " +
-            LocalDate.now().getYear() + "\"]"));
+    private static final SelenideElement textBtnSelectCurrentDay = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + dayOfMonthCurrent() + "\"]"));
     //Текст на кнопке текущей недели
-    private static final SelenideElement textBtnSelectCurrentWeek = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + generateRangeDateCurrentWeek() + "\"]"));
+    private static final SelenideElement textBtnSelectCurrentWeek = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + rangeDateCurrentWeek() + "\"]"));
     //Текст на кнопке текущего месяца с годом
-    private static final SelenideElement textBtnSelectCurrentMonth = $(MobileBy.xpath("//android.widget.TextView[@text=\"" +
-            MONTH_NAMES[LocalDate.now().getMonth().getValue() - 1] + " " +
-            LocalDate.now().getYear() + "\"]"));
+    private static final SelenideElement textBtnSelectCurrentMonth = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + monthWithYear() + "\"]"));
 
-    private static final SelenideElement btnSelectPrevDay = $(MobileBy.AccessibilityId(generateDayOfWeekForPreviousDay(LocalDate.now(), new Locale("ru")) + " " +
-            LocalDate.now().minusDays(1).getDayOfMonth() + " " +
-            LocalDate.now().minusDays(1).getMonth().getDisplayName(TextStyle.FULL, new Locale("ru")) + " " +
-            LocalDate.now().getYear()));
-    private static final SelenideElement btnSelectNextDay = $(MobileBy.AccessibilityId(generateDayOfWeekForNextDay(LocalDate.now(), new Locale("ru")) + " " +
-            LocalDate.now().plusDays(1).getDayOfMonth() + " " +
-            LocalDate.now().plusDays(1).getMonth().getDisplayName(TextStyle.FULL, new Locale("ru")) + " " +
-            LocalDate.now().getYear()));
+    private static final SelenideElement btnSelectPrevDay = $(MobileBy.AccessibilityId(dateOfDayPrev()));
+    private static final SelenideElement btnSelectNextDay = $(MobileBy.AccessibilityId(dateOfDayNext()));
     private static final SelenideElement mainStatisticForSwipe = $(MobileBy.xpath("//android.widget.ScrollView"));
     /**
      * Основная страница раздела Статистика для Android Арника
@@ -134,25 +122,6 @@ public class StatisticPage {
     }
 
     /**
-     * Методы для генерации дат в различных форматах для Статистики
-     */
-    // Метод для генерации названия дня недели
-    public static String generateDayOfWeek(LocalDate currentDate, Locale locale) {
-        return currentDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, locale);
-    }
-
-    // Метод для генерации сокращенного названия дня недели предыдущего месяца
-    public static String generateDayOfWeekForPreviousDay(LocalDate currentDate, Locale locale) {
-        return currentDate.minusDays(1).getDayOfWeek().getDisplayName(TextStyle.SHORT, locale).toUpperCase().substring(0, 1) + currentDate.minusDays(1).getDayOfWeek().getDisplayName(TextStyle.SHORT, locale).toLowerCase().substring(1);
-    }
-
-    // Метод для генерации сокращенного названия дня недели следующего месяца
-    public static String generateDayOfWeekForNextDay(LocalDate currentDate, Locale locale) {
-        return currentDate.plusDays(1).getDayOfWeek().getDisplayName(TextStyle.SHORT, locale).toUpperCase().substring(0, 1) + currentDate.plusDays(1).getDayOfWeek().getDisplayName(TextStyle.SHORT, locale).toLowerCase().substring(1);
-    }
-
-
-    /**
      * Готовые шаги для применения в тестах
      */
     @Step("Нажимаем на кнопку обновления в статистике")
@@ -193,5 +162,22 @@ public class StatisticPage {
     public static void switchStaticOnMonth() {
         getBtnConfigStatic().should(visible).click();
         btnOptionStatisticOnMonths.should(visible).click();
+    }
+
+    @Step("Проверяем заголовки страницы Статистика (страница отображается верно)")
+    public static void checkTitlePageStatisticViewSuccess() {
+        String finances = "Финансы";
+        String visits = "Визиты";
+        String cashBox = "Кассы";
+        String salaryEmployee = "Зарплата сотрудников";
+        String mySalary = "Моя зарплата";
+
+        titleFinancesStatistic.should(visible).shouldHave(exactText(finances));
+        titleVisitsStatistc.should(visible).shouldHave(exactText(visits));
+        swipeToRefresh(mainStatisticForSwipe, "up", 50);
+        titleCashboxStatistic.should(visible).shouldHave(exactText(cashBox));
+        titleSalaryEmployees.shouldHave(visible).shouldHave(exactText(salaryEmployee));
+        swipeToRefresh(mainStatisticForSwipe, "up", 50);
+        titleMySalary.should(visible).shouldHave(exactText(mySalary));
     }
 }

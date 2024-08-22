@@ -1,14 +1,12 @@
 package driver;
 //Взаимодействуем с драйвером через методы
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.actions;
 import static config.ConfigReader.platformAndroid;
 import static config.ConfigReader.platformIOS;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-
-import org.openqa.selenium.WebElement;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,16 +48,32 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      * @param text    текст
      */
     public static void sendKeysAndFind(SelenideElement element, String text) { //Метод для ввода данных в поля
-        element.should(Condition.visible).sendKeys(text);
+        element.should(visible).sendKeys(text);
 //        driver.pressKey(new KeyEvent(AndroidKey.ENTER)); //Вызываем метод для нажатия кнопки ENTER
     }
 
     /**
-     * Листает к элементу по его тексту и нажимает на элемент
+     * Листает к элементу по его тексту без нажатия
      *
      * @param text текст на элементе
      */
     public static void androidScrollToAnElementByText(String text) { // Метод для скроллинга к методу, который определен по тексту
+        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
+                ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
+                ".textContains(\"" + text + "\").instance(0))";
+        if (platformAndroid) {
+            ((AndroidDriver<?>) driver).findElementByAndroidUIAutomator(command); //Вызываем метод UIAutomator и передаем описанную выше команду
+        } else if (platformIOS) {
+            ((IOSDriver<?>) driver).findElement(MobileBy.iOSNsPredicateString(command)); //Вызываем метод UIAutomator и передаем описанную выше команду
+        }
+    }
+
+    /**
+     * Листает к 1-му элементу по его тексту и нажимает на элемент
+     *
+     * @param text текст на элементе
+     */
+    public static void androidScrollToAnElementByTextWithClick(String text) { // Метод для скроллинга к методу, который определен по тексту
         String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
                 ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
                 ".textContains(\"" + text + "\").instance(0))";
@@ -71,24 +85,58 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
     }
 
     /**
-     * Имитирует свайп для обновления страницы (потянуть вниз).
+     * Листает к следующему за 1-м элементом 2-му элементу по его тексту и нажимает на элемент
+     *
+     * @param text текст на элементе
+     */
+    public static void androidScrollToAnElementBySecondTextWithClick(String text) { // Метод для скроллинга к методу, который определен по тексту
+        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
+                ".scrollable(true).instance(1)).scrollIntoView(new UiSelector()" +
+                ".textContains(\"" + text + "\").instance(1))";
+        if (platformAndroid) {
+            ((AndroidDriver<?>) driver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+        } else if (platformIOS) {
+            ((IOSDriver<?>) driver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+        }
+    }
+
+    /**
+     * Имитирует свайп для обновления страницы (например, потянуть вниз).
      * Для использования передаем: xpath-локатор элемента в параметры; направление: right, left, down, up; процент смахивания относительно ширины или высоты
      */
     public static void swipeToRefresh(SelenideElement element, String direction, int percent) {
 
         Map<String, Object> params = new HashMap<>();
-        params.put("elementId", element.should(Condition.visible).getId());
+        params.put("elementId", element.should(visible).getId());
         params.put("percentage", percent);
         params.put("direction", direction);
 
+        // Выполняем свайп
         driver.executeScript("gesture: swipe", params);
     }
+
+//    /**
+//     * Имитирует свайп для поиска определенного элемента .
+//     * Для использования передаем: xpath-локатор элемента в параметры; целевой атрибут xpath; направление: right, left, down, up; процент смахивания относительно ширины или высоты
+//     */
+//    public static void scrollElementIntoView(SelenideElement elementScroll, String findElement, String direction, int percent) {
+//
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("scrollableView", elementScroll.should(visible).getId());
+//        params.put("strategy", "xpath");
+//        params.put("selector", findElement);
+//        params.put("percentage", percent);
+//        params.put("direction", direction);
+//        params.put("maxCount", 3);
+//
+//        driver.executeScript("gesture: scrollElementIntoView", params);
+//    }
 
     /**
      * Метод для клика с задержкой
      */
-    public static void slowClick(WebElement element) {
-        actions().moveToElement(element).pause(5000).click().perform(); // Задержка в 5 секунд (5000 миллисекунд)
+    public static void slowClick(SelenideElement element) {
+        actions().moveToElement(element).pause(3000).click().perform(); // Задержка в 3 секунд (3000 миллисекунд)
     }
 
 }

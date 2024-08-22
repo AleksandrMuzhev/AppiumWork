@@ -2,7 +2,7 @@ package tests;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
-import static driver.EmulatorHelper.androidScrollToAnElementByText;
+import static driver.EmulatorHelper.androidScrollToAnElementByTextWithClick;
 import static pages.AuthPage.authRegisterDate;
 import static pages.MainMenuPage.closePopUpMain;
 import static pages.SchedulePage.clickOnAddEmployeeInBtnPlus;
@@ -20,8 +20,8 @@ import static pages.SchedulePage.nextSwitchCalendar;
 import static pages.SchedulePage.prevSwitchCalendar;
 import static pages.SchedulePage.updateScheduleSwipe;
 import static pages.SchedulePage.viewScheduleByWeek;
-import static pages.VisitPage.getTitleCalendarVisit;
-import static pages.VisitPage.getTitleNewVisitText;
+import static pages.VisitPage.getTextTitleCalendarVisit;
+import static pages.VisitPage.getTextTitleNewVisitText;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ public class ScheduleTest extends BaseTest {
     public void setUp() {
         authRegisterDate();
         closePopUpMain();
-        androidScrollToAnElementByText("Расписание");
+        androidScrollToAnElementByTextWithClick("Расписание");
     }
 
     @Description("Переключаем на странице расписания дату на месяц назад и на месяц вперед")
@@ -68,7 +68,7 @@ public class ScheduleTest extends BaseTest {
     public void testWorkButtonCreateVisit() {
         clickOnNewVisitInBtnPlus();
 
-        getTitleCalendarVisit().should(visible).shouldHave(exactText("Дата посещения"));
+        getTextTitleCalendarVisit().should(visible).shouldHave(exactText("Дата посещения"));
     }
 
     @Description("Проверяем открытие формы создания визита через нажатие на свободное время")
@@ -76,7 +76,7 @@ public class ScheduleTest extends BaseTest {
     public void testCreateVisitFormWithClickOnFreedomTime() {
         createVisitClickOnFreedomTime();
 
-        getTitleNewVisitText().should(visible).shouldHave(exactText("Новый визит"));
+        getTextTitleNewVisitText().should(visible).shouldHave(exactText("Новый визит"));
     }
 
     @Description("Проверяем открытие bottomsheet добавления сотрудника через нажатие на свободное время")

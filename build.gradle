@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.github.javafaker:javafaker:1.0.2'
     testImplementation "com.github.romankh3:image-comparison:4.4.0"
     //библиотека для сравнения скриншотов: эскиз и тот, что на экране (например, сравнение верстки)
     testImplementation(
@@ -36,7 +37,7 @@ dependencies {
             "org.junit.jupiter:junit-jupiter-engine:$junitVersion" //для работы всех тестов
     )
 
-    implementation "io.cucumber:cucumber-java:$cucumberVersion"
+//    testImplementation "io.cucumber:cucumber-java:$cucumberVersion"
 }
 
 test {
@@ -48,4 +49,9 @@ test {
             exceptionFormat "short"
         }
     }
+}
+
+task runMultipleTests(type: Test) {
+    useJUnitPlatform() // для JUnit 5
+    include 'tests/StatisticTest.class', 'tests/ScheduleTest.class', 'tests/VisitTest.class', 'tests/ClientsTest.class' // укажите ваши тестовые классы для запуска одновременно
 }

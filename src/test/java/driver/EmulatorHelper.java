@@ -3,13 +3,18 @@ package driver;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.actions;
+import static com.codeborne.selenide.appium.SelenideAppium.$;
+import static com.codeborne.selenide.appium.SelenideAppium.$$;
 import static com.codeborne.selenide.appium.SelenideAppium.$x;
+import static org.openqa.selenium.By.xpath;
 import static config.ConfigReader.platformAndroid;
 import static config.ConfigReader.platformIOS;
 
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.appium.SelenideAppiumCollection;
 import com.codeborne.selenide.appium.SelenideAppiumElement;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebElement;
 
 import java.util.HashMap;
@@ -152,7 +157,8 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
     }
 
     /**
-     * Методы для обращения по локаторам
+     * Метод для обращения по xpath
+     *
      * @param xpath
      * @return
      */
@@ -160,4 +166,53 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
         return $x(xpath);
     }
 
+    /**
+     * Метод для обращения по xpath(resourceId)
+     *
+     * @param resourceId
+     * @return
+     */
+    public static SelenideAppiumCollection collectionByResourceId(String resourceId) {
+        return $$(xpath("//*[@resource-id='" + resourceId + "']"));
+    }
+
+    /**
+     * Метод для обращения по xpath(className)
+     *
+     * @param className
+     * @return
+     */
+    public static SelenideAppiumElement elementByClass(String className) {
+        return $x("//" + className);
+    }
+
+    /**
+     * Метод для обращения по xpath(className)
+     *
+     * @param text
+     * @return
+     */
+    public static SelenideAppiumElement elementByXpathText(String text) {
+        return $x("//*[@text='" + text + "']");
+    }
+
+    /**
+     * Метод для обращения по xpath(className)
+     *
+     * @param contentDesc
+     * @return
+     */
+    public static SelenideAppiumElement elementByContentDesc(String contentDesc) {
+        return $x("//*[@content-desc='" + contentDesc + "']");
+    }
+
+    /**
+     * Метод для обращения по xpath(className)
+     *
+     * @param id
+     * @return
+     */
+    public static SelenideAppiumElement elementById(String id) {
+        return $(By.id(id));
+    }
 }

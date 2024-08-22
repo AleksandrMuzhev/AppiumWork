@@ -3,9 +3,10 @@ package pages;
 import static com.codeborne.selenide.Selenide.$;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.appium.SelenideAppiumElement;
 
-import io.appium.java_client.MobileBy;
+import org.openqa.selenium.By;
+
 import io.qameta.allure.Step;
 
 /**
@@ -13,7 +14,7 @@ import io.qameta.allure.Step;
  */
 public class StartPage extends BasePage {
 
-    private SelenideElement btnMainTabBar = $(MobileBy.id("menu_catalog"));
+    private SelenideAppiumElement btnMainTabBar = (SelenideAppiumElement) $(By.id("menu_catalog"));
 
     @Step("Проверяем, что кнопка меню выделена оранжевым/синим цветом")
     public void isMainMenuIconSelected() {

@@ -6,8 +6,8 @@ import static config.ConfigReader.platformIOS;
 
 import com.codeborne.selenide.WebDriverProvider;
 
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -19,7 +19,9 @@ import config.ConfigReader;
 import helper.ApkInfoHelper;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.remote.AndroidMobileCapabilityType;
+import io.appium.java_client.android.options.UiAutomator2Options;
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.ios.options.XCUITestOptions;
 
 /**
  * Класс для инициализации AndroidDriver || IOSDriver
@@ -75,28 +77,38 @@ public class EmulatorDriver implements WebDriverProvider { //Имплемент�
     /**
      * Создает appium сессию AndroidDriver || IOSDriver
      *
-     * @param desiredCapabilities настройки для создания сесcии
+     * @param capabilities настройки для создания сесcии
      * @return сессия AndroidDriver || IOSDriver
      */
     @Nonnull
     @Override
-    public WebDriver createDriver(DesiredCapabilities desiredCapabilities) {
+    public WebDriver createDriver(@Nonnull Capabilities capabilities) {
         if (platformAndroid) {
             initPackageAndActivity();
-            desiredCapabilities = new DesiredCapabilities();
 
-            desiredCapabilities.setCapability(AndroidMobileCapabilityType.AUTO_GRANT_PERMISSIONS, true);
-            desiredCapabilities.setCapability("deviceName", DEVICE_NAME);
-            desiredCapabilities.setCapability("platformName", PLATFORM_NAME);
-            desiredCapabilities.setCapability("appPackage", APP_PACKAGE);
-            desiredCapabilities.setCapability("appActivity", APP_ACTIVITY);
-            desiredCapabilities.setCapability("app", getAbsolutePath(APP));
-            desiredCapabilities.setCapability("automationName", AUTOMATION_NAME);
-            driver = new AndroidDriver<>(getUrl(), desiredCapabilities);
+            UiAutomator2Options options = new UiAutomator2Options();
+            options.setAutoGrantPermissions(true);
+            options.setDeviceName(DEVICE_NAME);
+            options.setPlatformName(PLATFORM_NAME);
+            options.setAppPackage(APP_PACKAGE);
+            options.setAppActivity(APP_ACTIVITY);
+            options.setApp(getAbsolutePath(APP));
+            options.setAutomationName(AUTOMATION_NAME);
+
+            driver = new AndroidDriver(getUrl(), options);
         } else if (platformIOS) {
-            // Аналогично настройки для IOS
-        }
+            // Конфигурация для iOS
+            XCUITestOptions options = new XCUITestOptions();
+            options.setDeviceName(DEVICE_NAME);
+            options.setPlatformName(PLATFORM_NAME);
+            options.setApp(getAbsolutePath(APP));
+            options.setAutomationName(AUTOMATION_NAME);
+//            options.setUdid(UDID);
+//            options.setXcodeSigningId(XCODE_SIGNING_ID);
+//            options.setBundleId(BUNDLE_ID);
 
+            driver = new IOSDriver(getUrl(), options);
+        }
         return driver;
     }
 }

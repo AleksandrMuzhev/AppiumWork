@@ -8,10 +8,11 @@ import static config.ConfigReader.platformIOS;
 
 import com.codeborne.selenide.SelenideElement;
 
+import org.openqa.selenium.remote.RemoteWebElement;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import io.appium.java_client.MobileBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 
@@ -31,12 +32,14 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      */
     public static void closeKeyBoard() { //Метод для закрытия клавиатуры
         if (platformAndroid) {
-            if (((AndroidDriver<?>) driver).isKeyboardShown()) { //Если клавиатура открыта, то далее закрываем ее
-                driver.hideKeyboard();
+            AndroidDriver androidDriver = (AndroidDriver) driver;
+            if (androidDriver.isKeyboardShown()) { //Если клавиатура открыта, то далее закрываем ее
+                androidDriver.hideKeyboard();
             }
         } else if (platformIOS) {
-            if (((IOSDriver<?>) driver).isKeyboardShown()) { //Если клавиатура открыта, то далее закрываем ее
-                driver.hideKeyboard();
+            IOSDriver iosDriver = (IOSDriver) driver;
+            if (iosDriver.isKeyboardShown()) { //Если клавиатура открыта, то далее закрываем ее
+                iosDriver.hideKeyboard();
             }
         }
     }
@@ -52,62 +55,69 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
 //        driver.pressKey(new KeyEvent(AndroidKey.ENTER)); //Вызываем метод для нажатия кнопки ENTER
     }
 
-    /**
-     * Листает к элементу по его тексту без нажатия
-     *
-     * @param text текст на элементе
-     */
-    public static void androidScrollToAnElementByText(String text) { // Метод для скроллинга к методу, который определен по тексту
-        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
-                ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
-                ".textContains(\"" + text + "\").instance(0))";
-        if (platformAndroid) {
-            ((AndroidDriver<?>) driver).findElementByAndroidUIAutomator(command); //Вызываем метод UIAutomator и передаем описанную выше команду
-        } else if (platformIOS) {
-            ((IOSDriver<?>) driver).findElement(MobileBy.iOSNsPredicateString(command)); //Вызываем метод UIAutomator и передаем описанную выше команду
-        }
-    }
-
-    /**
-     * Листает к 1-му элементу по его тексту и нажимает на элемент
-     *
-     * @param text текст на элементе
-     */
-    public static void androidScrollToAnElementByTextWithClick(String text) { // Метод для скроллинга к методу, который определен по тексту
-        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
-                ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
-                ".textContains(\"" + text + "\").instance(0))";
-        if (platformAndroid) {
-            ((AndroidDriver<?>) driver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
-        } else if (platformIOS) {
-            ((IOSDriver<?>) driver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
-        }
-    }
-
-    /**
-     * Листает к следующему за 1-м элементом 2-му элементу по его тексту и нажимает на элемент
-     *
-     * @param text текст на элементе
-     */
-    public static void androidScrollToAnElementBySecondTextWithClick(String text) { // Метод для скроллинга к методу, который определен по тексту
-        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
-                ".scrollable(true).instance(1)).scrollIntoView(new UiSelector()" +
-                ".textContains(\"" + text + "\").instance(1))";
-        if (platformAndroid) {
-            ((AndroidDriver<?>) driver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
-        } else if (platformIOS) {
-            ((IOSDriver<?>) driver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
-        }
-    }
+//    /**
+//     * Листает к элементу по его тексту без нажатия
+//     *
+//     * @param text текст на элементе
+//     */
+//    public static void androidScrollToAnElementByText(String text) { // Метод для скроллинга к методу, который определен по тексту
+//        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
+//                ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
+//                ".textContains(\"" + text + "\").instance(0))";
+//        if (platformAndroid) {
+//            AndroidDriver androidDriver = (AndroidDriver) driver;
+//            (androidDriver).findElementByAndroidUIAutomator(command); //Вызываем метод UIAutomator и передаем описанную выше команду
+//        } else if (platformIOS) {
+//            IOSDriver iosDriver = (IOSDriver) driver;
+//            (iosDriver).findElement(MobileBy.iOSNsPredicateString(command)); //Вызываем метод UIAutomator и передаем описанную выше команду
+//        }
+//    }
+//
+//    /**
+//     * Листает к 1-му элементу по его тексту и нажимает на элемент
+//     *
+//     * @param text текст на элементе
+//     */
+//    public static void androidScrollToAnElementByTextWithClick(String text) { // Метод для скроллинга к методу, который определен по тексту
+//        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
+//                ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
+//                ".textContains(\"" + text + "\").instance(0))";
+//        if (platformAndroid) {
+//            AndroidDriver androidDriver = (AndroidDriver) driver;
+//            (androidDriver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+//        } else if (platformIOS) {
+//            IOSDriver iosDriver = (IOSDriver) driver;
+//            (iosDriver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+//        }
+//    }
+//
+//    /**
+//     * Листает к следующему за 1-м элементом 2-му элементу по его тексту и нажимает на элемент
+//     *
+//     * @param text текст на элементе
+//     */
+//    public static void androidScrollToAnElementBySecondTextWithClick(String text) { // Метод для скроллинга к методу, который определен по тексту
+//        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
+//                ".scrollable(true).instance(1)).scrollIntoView(new UiSelector()" +
+//                ".textContains(\"" + text + "\").instance(1))";
+//        if (platformAndroid) {
+//            AndroidDriver androidDriver = (AndroidDriver) driver;
+//            (androidDriver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+//        } else if (platformIOS) {
+//            IOSDriver iosDriver = (IOSDriver) driver;
+//            (iosDriver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+//        }
+//    }
 
     /**
      * Имитирует свайп для обновления страницы (например, потянуть вниз).
      * Для использования передаем: xpath-локатор элемента в параметры; направление: right, left, down, up; процент смахивания относительно ширины или высоты
      */
     public static void swipeToRefresh(SelenideElement element, String direction, int percent) {
+        String elementId = ((RemoteWebElement) element.getWrappedElement()).getId();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("elementId", element.should(visible).getId());
+        params.put("elementId", elementId);
         params.put("percentage", percent);
         params.put("direction", direction);
 

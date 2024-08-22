@@ -9,9 +9,14 @@ version = '1.0-SNAPSHOT'
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
-def allureVersion = '2.19.0', //Для урегулирования конфликта версий в зависимостях в случае их доп-я
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.release = 17
+}
+
+def allureVersion = '2.29.0', //Для урегулирования конфликта версий в зависимостях в случае их доп-я
     junitVersion = '5.8.2',
-    slf4jVersion = '1.7.32',
+//    slf4jVersion = '1.7.32',
     cucumberVersion = '7.18.1'
 
 repositories {
@@ -22,7 +27,7 @@ dependencies {
     implementation 'com.github.javafaker:javafaker:1.0.2'
     testImplementation "com.github.romankh3:image-comparison:4.4.0"
     implementation 'com.codeborne:selenide-appium:7.4.2'
-    implementation 'org.aspectj:aspectjrt:1.9.9'
+    runtimeOnly 'org.aspectj:aspectjweaver:1.9.8'
     //библиотека для сравнения скриншотов: эскиз и тот, что на экране (например, сравнение верстки)
     testImplementation(
             "io.qameta.allure:allure-junit5:$allureVersion", //для описания шагов в allure
@@ -35,7 +40,7 @@ dependencies {
             "org.junit.platform:junit-platform-suite:1.10.0"
     )
     testRuntimeOnly(
-            "org.slf4j:slf4j-simple:$slf4jVersion", //для логирования
+//            "org.slf4j:slf4j-simple:$slf4jVersion", //для логирования
             "org.junit.jupiter:junit-jupiter-engine:$junitVersion" //для работы всех тестов
     )
 

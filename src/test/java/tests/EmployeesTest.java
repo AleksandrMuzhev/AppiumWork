@@ -14,7 +14,7 @@ import io.qameta.allure.Description;
 public class EmployeesTest extends BaseTest {
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws InterruptedException {
         authRegisterDate();
         closePopUpMain();
 //        androidScrollToAnElementByTextWithClick("Меню");

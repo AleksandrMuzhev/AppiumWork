@@ -1,24 +1,12 @@
 package pages;
 
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.appium.SelenideAppium.$$;
-import static com.codeborne.selenide.appium.SelenideAppium.$x;
-import static org.openqa.selenium.By.xpath;
 import static config.ConfigReader.arnica;
 import static config.ConfigReader.platformAndroid;
 import static config.ConfigReader.platformIOS;
 import static config.ConfigReader.sqns;
-import static driver.EmulatorHelper.sendKeysAndFind;
+import static driver.EmulatorHelper.elementByXpath;
 import static driver.EmulatorHelper.slowClick;
-import static helper.Constants.getLOGIN;
-import static helper.Constants.getPASSWORD;
-
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.appium.SelenideAppiumCollection;
-import com.codeborne.selenide.appium.SelenideAppiumElement;
-
-import org.openqa.selenium.By;
 
 import io.qameta.allure.Step;
 
@@ -31,10 +19,8 @@ public class AuthPage {
     /**
      * Стартовая страница авторизации после запуска приложения для Android Арника
      */
-    public static String btnLoginA = "//android.widget.Button[@content-desc=\"Войти\"]";
-    public static SelenideAppiumElement elementByXpath(String xpath) {
-        return $x(xpath);
-    }
+    private static String btnLoginA = "//android.widget.Button[@content-desc=\"Войти\"]";
+
 //    private static final SelenideAppiumElement btnRegisterA = (SelenideAppiumElement) $(xpath("//android.widget.Button[@content-desc=\"Зарегистрироваться\"]"));
 //    private static final SelenideAppiumElement btnDemoA = (SelenideAppiumElement) $(xpath("//android.widget.Button[@content-desc=\"Демо-аккаунт\"]"));
 //    private static final SelenideAppiumElement textMainAuthHelpA = (SelenideAppiumElement) $(xpath("//android.widget.TextView[@text=\"Авторизуйтесь для доступа к системе\"]"));
@@ -57,8 +43,8 @@ public class AuthPage {
     /**
      * Форма авторизации (при вводе логина и пароля) для Android Арника
      */
-//    private static final SelenideAppiumElement loginFieldA = (SelenideAppiumElement) $(xpath("(//android.widget.EditText[@resource-id=\"text-input-outlined\"])[1]"));
-//    private static final SelenideAppiumElement passFieldA = (SelenideAppiumElement) $(xpath("(//android.widget.EditText[@resource-id=\"text-input-outlined\"])[2]"));
+    private static String loginFieldA = "(//android.widget.EditText[@resource-id=\"text-input-outlined\"])[1]";
+    private static String passFieldA = "(//android.widget.EditText[@resource-id=\"text-input-outlined\"])[2]";
     /**
      * Форма авторизации (при вводе логина и пароля) для Android SQNS
      */
@@ -106,12 +92,14 @@ public class AuthPage {
      * Готовые шаги(сценарии) для использования в теста
      */
     @Step("Авторизация пользователя с зарегистрированным данными Логин и Пароль")
-    public static void authRegisterDate() {
+    public static void authRegisterDate() throws InterruptedException {
         if (platformAndroid) {
             if (arnica) {
                 elementByXpath(btnLoginA).should(visible);
-//                btnLoginA.should(visible);
                 slowClick(elementByXpath(btnLoginA));
+                Thread.sleep(5000);
+//                btnLoginA.should(visible);
+//                slowClick(elementByXpath(btnLoginA));
 //                sendKeysAndFind(loginFieldA, getLOGIN());
 //                sendKeysAndFind(passFieldA, getPASSWORD());
 //                btnLoginA.should(visible).click();

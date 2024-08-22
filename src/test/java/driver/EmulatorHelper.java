@@ -3,10 +3,12 @@ package driver;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.actions;
+import static com.codeborne.selenide.appium.SelenideAppium.$x;
 import static config.ConfigReader.platformAndroid;
 import static config.ConfigReader.platformIOS;
 
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.appium.SelenideAppiumElement;
 
 import org.openqa.selenium.remote.RemoteWebElement;
 
@@ -147,6 +149,15 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      */
     public static void slowClick(SelenideElement element) {
         actions().moveToElement(element).pause(3000).click().perform(); // Задержка в 3 секунд (3000 миллисекунд)
+    }
+
+    /**
+     * Методы для обращения по локаторам
+     * @param xpath
+     * @return
+     */
+    public static SelenideAppiumElement elementByXpath(String xpath) {
+        return $x(xpath);
     }
 
 }

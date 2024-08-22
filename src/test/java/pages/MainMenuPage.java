@@ -1,6 +1,7 @@
 package pages;
 
 import static com.codeborne.selenide.Selenide.$;
+import static driver.EmulatorHelper.elementByXpath;
 import static driver.EmulatorHelper.goBack;
 
 import com.codeborne.selenide.appium.SelenideAppiumElement;
@@ -28,7 +29,7 @@ public class MainMenuPage extends StartPage {
 //    /**
 //     * Элементы всплыющего попапа для оценки качества для Android (Все продукты)
 //     */
-    private static final SelenideAppiumElement adPopUpRate = (SelenideAppiumElement) $(By.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]"));
+    private static final String adPopUpRate = "//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]";
 
     //    private static final SelenideElement textTitlePopupRate = $(MobileBy.xpath("//android.widget.TextView[@text=\"Пожалуйста, оцените наше приложение\"]"));
 //    private static final SelenideElement ErrorCritical = $(MobileBy.xpath("//android.widget.TextView[@text=\"Что-то пошло не так...\"]"));
@@ -81,7 +82,7 @@ public class MainMenuPage extends StartPage {
 //
     @Step("Закрываем открывшееся всплывающее окно")
     public static void closePopUpMain() {
-        if (adPopUpRate.exists()) {
+        if (elementByXpath(adPopUpRate).exists()) {
             goBack();
         }
     }

@@ -32,7 +32,6 @@ public class EmulatorDriver implements WebDriverProvider { //Имплемент�
     //чтение пропертей
     private static final String DEVICE_NAME = ConfigReader.emulatorConfig.deviceName();
     private static final String PLATFORM_NAME = ConfigReader.emulatorConfig.platformName();
-
     private static String APP_PACKAGE = ConfigReader.emulatorConfig.appPackage();
     private static String APP_ACTIVITY = ConfigReader.emulatorConfig.appActivity();
     private static final String APP = ConfigReader.emulatorConfig.app();
@@ -84,6 +83,7 @@ public class EmulatorDriver implements WebDriverProvider { //Имплемент�
     @Override
     public WebDriver createDriver(@Nonnull Capabilities capabilities) {
         if (platformAndroid) {
+            // Конфигурация для Android
             initPackageAndActivity();
 
             UiAutomator2Options options = new UiAutomator2Options();

@@ -1,10 +1,13 @@
 package pages;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static config.ConfigReader.arnica;
 import static config.ConfigReader.sqns;
+import static driver.EmulatorHelper.androidScrollToAnElementByTextWithClick;
 import static driver.EmulatorHelper.goBack;
+import static driver.EmulatorHelper.slowClick;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -31,7 +34,6 @@ public class MainMenuPage extends StartPage {
     /**
      * Элементы всплыющего попапа для оценки качества для Android (Все продукты)
      */
-    private static final SelenideElement adPopUpRate = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]"));
     private static final SelenideElement textTitlePopupRate = $(MobileBy.xpath("//android.widget.TextView[@text=\"Пожалуйста, оцените наше приложение\"]"));
     private static final SelenideElement ErrorCritical = $(MobileBy.xpath("//android.widget.TextView[@text=\"Что-то пошло не так...\"]"));
     private static final SelenideElement resetButton = $(MobileBy.AccessibilityId("Сбросить ошибку"));
@@ -39,11 +41,13 @@ public class MainMenuPage extends StartPage {
     /**
      * Элементы всплыющего попапа для оценки качества для Android Арника
      */
+    private static final SelenideElement adPopUpRateA = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]"));
     private static final SelenideElement btnCloseRateA = $(MobileBy.xpath("//android.widget.TextView[@text=\"Напомнить позже\"]"));
     /**
      * Элементы всплыющего попапа для оценки качества для Android SQNS
      */
-    private static final SelenideElement btnCloseRateS = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Напомнить позже\"]"));
+    private static final SelenideElement adPopUpRateS = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.widget.ScrollView[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]"));
+    private static final SelenideElement btnCloseRateS = $(MobileBy.xpath("//android.widget.Button[@content-desc=\\\"Напомнить позже\\\"]"));
 
     /**
      * Элементы бокового главного меню приложения для Android (Все продукты)
@@ -83,8 +87,15 @@ public class MainMenuPage extends StartPage {
 
     @Step("Закрываем открывшееся всплывающее окно")
     public static void closePopUpMain() {
-        if (adPopUpRate.exists()) {
-            goBack();
+        if (arnica) {
+            if (adPopUpRateA.exists()) {
+                goBack();
+            }
+        } else if (sqns) {
+//            if (adPopUpRateS.exists()) {
+//                slowClick(btnCloseRateS);
+                androidScrollToAnElementByTextWithClick("Напомнить позже");
+//            }
         }
     }
 

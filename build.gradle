@@ -9,7 +9,12 @@ version = '1.0-SNAPSHOT'
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
-def allureVersion = '2.19.0', //Для урегулирования конфликта версий в зависимостях в случае их доп-я
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.release = 17
+}
+
+def allureVersion = '2.29.0', //Для урегулирования конфликта версий в зависимостях в случае их доп-я
     junitVersion = '5.8.2',
     slf4jVersion = '1.7.32',
     cucumberVersion = '7.18.1'

@@ -102,8 +102,7 @@ public class AuthPage {
     public static void authRegisterDate() {
         if (platformAndroid) {
             if (arnica) {
-                btnLoginA.should(visible);
-                slowClick(btnLoginA);
+                btnLoginA.should(visible).click();
                 sendKeysAndFind(loginFieldA, getLOGIN());
                 sendKeysAndFind(passFieldA, getPASSWORD());
                 btnLoginA.should(visible).click();

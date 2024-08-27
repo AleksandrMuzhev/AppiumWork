@@ -11,7 +11,8 @@ import static helper.DateHelper.dateOfDayNext;
 import static helper.DateHelper.dateOfDayPrev;
 import static helper.DateHelper.dayOfMonthCurrent;
 import static helper.DateHelper.monthWithYear;
-import static helper.DateHelper.rangeDateCurrentWeek;
+import static helper.DateHelper.rangeDateCurrentWeekNotNameMonthStartWeek;
+import static helper.DateHelper.rangeDateCurrentWeekWithNameMonthStartWeek;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -37,7 +38,9 @@ public class StatisticPage {
     //Текст на кнопке текущего дня
     private static final SelenideElement textBtnSelectCurrentDay = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + dayOfMonthCurrent() + "\"]"));
     //Текст на кнопке текущей недели
-    private static final SelenideElement textBtnSelectCurrentWeek = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + rangeDateCurrentWeek() + "\"]"));
+    private static final SelenideElement textBtnSelectCurrentWeekShortStart = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + rangeDateCurrentWeekNotNameMonthStartWeek() + "\"]"));
+    private static final SelenideElement textBtnSelectCurrentWeekLongStart = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + rangeDateCurrentWeekWithNameMonthStartWeek() + "\"]"));
+
     //Текст на кнопке текущего месяца с годом
     private static final SelenideElement textBtnSelectCurrentMonth = $(MobileBy.xpath("//android.widget.TextView[@text=\"" + monthWithYear() + "\"]"));
 
@@ -84,7 +87,10 @@ public class StatisticPage {
     }
 
     public static SelenideElement getTextBtnSelectCurrentWeek() {
-        return textBtnSelectCurrentWeek;
+        if (!textBtnSelectCurrentWeekShortStart.exists()) {
+            return textBtnSelectCurrentWeekLongStart;
+        }
+        return textBtnSelectCurrentWeekShortStart;
     }
 
     public static SelenideElement getTextBtnSelectCurrentMonth() {

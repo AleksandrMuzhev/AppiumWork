@@ -136,7 +136,7 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      * Метод для клика с задержкой
      */
     public static void slowClick(SelenideElement element) {
-        actions().moveToElement(element).pause(3000).click().perform(); // Задержка в 3 секунд (3000 миллисекунд)
+        actions().moveToElement(element).pause(5000).click().perform(); // Задержка в 3 секунд (3000 миллисекунд)
     }
 
 }

@@ -151,9 +151,9 @@ public class DateHelper {
 
 
     /**
-     * Метод для генерации диапазона текущей недели (Например, 29 июля - 04 августа 2024)
+     * Метод для генерации диапазона текущей недели без названия месяца у дня старта недели (Например, 29 - 04 августа 2024)
      */
-    public static String rangeDateCurrentWeek() {
+    public static String rangeDateCurrentWeekNotNameMonthStartWeek() {
         LocalDate currentDate = LocalDate.now();
         int dayOfWeek = currentDate.getDayOfWeek().getValue(); // 1 = понедельник, 2 = вторник,..., 7 = воскресенье
 
@@ -161,6 +161,24 @@ public class DateHelper {
         LocalDate endOfWeek = currentDate.plusDays(7 - dayOfWeek); // воскресенье
 
         DateTimeFormatter formatterFrom = DateTimeFormatter.ofPattern("dd", new Locale("ru"));
+        DateTimeFormatter formatterTo = DateTimeFormatter.ofPattern("dd MMMM uuuu", new Locale("ru"));
+
+        String formattedStartOfWeek = startOfWeek.format(formatterFrom);
+        String formattedEndOfWeek = endOfWeek.format(formatterTo);
+
+        return String.format("%s - %s", formattedStartOfWeek, formattedEndOfWeek);
+    }
+    /**
+     * Метод для генерации диапазона текущей недели c названием месяца у дня старта недели (Например, 29 июля - 04 августа 2024)
+     */
+    public static String rangeDateCurrentWeekWithNameMonthStartWeek() {
+        LocalDate currentDate = LocalDate.now();
+        int dayOfWeek = currentDate.getDayOfWeek().getValue(); // 1 = понедельник, 2 = вторник,..., 7 = воскресенье
+
+        LocalDate startOfWeek = currentDate.minusDays(dayOfWeek - 1); // понедельник
+        LocalDate endOfWeek = currentDate.plusDays(7 - dayOfWeek); // воскресенье
+
+        DateTimeFormatter formatterFrom = DateTimeFormatter.ofPattern("dd MMMM", new Locale("ru"));
         DateTimeFormatter formatterTo = DateTimeFormatter.ofPattern("dd MMMM uuuu", new Locale("ru"));
 
         String formattedStartOfWeek = startOfWeek.format(formatterFrom);

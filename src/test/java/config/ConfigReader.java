@@ -29,7 +29,7 @@ public class ConfigReader {
 
     private static boolean isSqnsApp() {
         String appPath = ConfigReader.emulatorConfig.app();
-        return appPath.contains("sqns12.apk");
+        return appPath.contains("sqns15.apk");
     }
 
     /**

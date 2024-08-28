@@ -11,7 +11,7 @@ import tests.BaseTest;
  */
 public class WebDriverHelper extends BaseTest {
     public static void setWebDriver() {
-        SelenideConfig config = new SelenideConfig().browser("chrome").browserSize("1360x768");
+        SelenideConfig config = new SelenideConfig().browser("chrome").browserSize("1680x1050");
         SelenideDriver driver = new SelenideDriver(config);
         WebDriverRunner.setWebDriver(driver.getAndCheckWebDriver());
     }

@@ -1,13 +1,23 @@
 package pages;
 
-import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.appium.AppiumSelectors.byText;
+import static com.codeborne.selenide.appium.SelenideAppium.$;
+import static config.ConfigReader.arnica;
+import static config.ConfigReader.sqns;
+import static driver.EmulatorHelper.collectionByXpath;
 import static driver.EmulatorHelper.elementByXpath;
+import static driver.EmulatorHelper.elementByXpathText;
 import static driver.EmulatorHelper.goBack;
+import static driver.EmulatorHelper.slowClick;
 
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.appium.SelenideAppiumCollection;
 import com.codeborne.selenide.appium.SelenideAppiumElement;
 
-import org.openqa.selenium.By;
+import java.time.Duration;
 
+import driver.EmulatorHelper;
 import io.qameta.allure.Step;
 
 /**
@@ -18,21 +28,23 @@ public class MainMenuPage extends StartPage {
     //    /**
 //     * Элементы TabBar (в нижней части) для Android (Все продукты)
 //     */
-//    private static final ElementsCollection namesBtnTabBar = $$(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup"));
+//    private static final SelenideAppiumCollection namesBtnTabBar = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup");
 //    private static final ElementsCollection iconBtnTabBar = $$(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]"));
+        private static final SelenideAppiumElement btnStatisticTabBar = elementByXpathText("Статистика");
+        private static final SelenideAppiumElement btnScheduleTabBar = elementByXpathText("Расписание");
 //    private static final SelenideElement btnStatisticTabBar = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.Button[1]"));
 //    private static final SelenideElement btnClientsTabBar = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.Button[3]"));
 //    private static final SelenideElement btnScheduleTabBar = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.Button[2]"));
 //    private static final SelenideElement btnNotificationsTabBar = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.Button[4]"));
 //    private static final SelenideElement btnMainTabBar = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.Button[5]"));
-//
-//    /**
-//     * Элементы всплыющего попапа для оценки качества для Android (Все продукты)
-//     */
-    private static final String adPopUpRate = "//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]";
 
-    //    private static final SelenideElement textTitlePopupRate = $(MobileBy.xpath("//android.widget.TextView[@text=\"Пожалуйста, оцените наше приложение\"]"));
-//    private static final SelenideElement ErrorCritical = $(MobileBy.xpath("//android.widget.TextView[@text=\"Что-то пошло не так...\"]"));
+    /**
+     * Элементы всплыющего попапа для оценки качества для Android (Все продукты)
+     */
+    private static final SelenideAppiumElement adPopUpRate = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]");
+    private static final SelenideAppiumElement textTitlePopupRate = elementByXpathText("Пожалуйста, оцените наше приложение\"]");
+
+    //    private static final SelenideElement ErrorCritical = $(MobileBy.xpath("//android.widget.TextView[@text=\"Что-то пошло не так...\"]"));
 //    private static final SelenideElement resetButton = $(MobileBy.AccessibilityId("Сбросить ошибку"));
 //    private static final SelenideElement frameLayout = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout"));
 //    /**
@@ -68,9 +80,10 @@ public class MainMenuPage extends StartPage {
 //    private static final SelenideElement sectionSupportMain = $(MobileBy.AccessibilityId("Техподдержка"));
 //    private static final SelenideElement sectionAboutMain = $(MobileBy.AccessibilityId("О приложении"));
 //
-//    /**
-//     * Геттеры для обращения к полям класса из тестов
-//     */
+
+    /**
+     * Геттеры для обращения к полям класса из тестов
+     */
 //    public static SelenideElement getBtnCloseRate() {
 //        if (arnica) {
 //            return btnCloseRateA;
@@ -79,11 +92,18 @@ public class MainMenuPage extends StartPage {
 //        }
 //        return null;
 //    }
-//
+    public static SelenideAppiumElement getNameBtnTabBar(String element) {
+        return elementByXpathText(element);
+    }
+
     @Step("Закрываем открывшееся всплывающее окно")
     public static void closePopUpMain() {
-        if (elementByXpath(adPopUpRate).exists()) {
-            goBack();
+        if (arnica) {
+            if (adPopUpRate.exists()) {
+                goBack();
+            }
+        } else if (sqns) {
+            $(byText("Напомнить позже")).shouldBe(visible, Duration.ofSeconds(15)).click();
         }
     }
 //

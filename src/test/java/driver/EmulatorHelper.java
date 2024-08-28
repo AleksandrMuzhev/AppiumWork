@@ -91,10 +91,10 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
 //                ".textContains(\"" + text + "\").instance(0))";
 //        if (platformAndroid) {
 //            AndroidDriver androidDriver = (AndroidDriver) driver;
-//            (androidDriver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+//            androidDriver.findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
 //        } else if (platformIOS) {
 //            IOSDriver iosDriver = (IOSDriver) driver;
-//            (iosDriver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
+//            iosDriver.findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
 //        }
 //    }
 //
@@ -120,7 +120,7 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      * Имитирует свайп для обновления страницы (например, потянуть вниз).
      * Для использования передаем: xpath-локатор элемента в параметры; направление: right, left, down, up; процент смахивания относительно ширины или высоты
      */
-    public static void swipeToRefresh(SelenideElement element, String direction, int percent) {
+    public static void swipeToRefresh(SelenideAppiumElement element, String direction, int percent) {
         String elementId = ((RemoteWebElement) element.getWrappedElement()).getId();
 
         Map<String, Object> params = new HashMap<>();
@@ -152,8 +152,8 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
     /**
      * Метод для клика с задержкой
      */
-    public static void slowClick(SelenideElement element) {
-        actions().moveToElement(element).pause(3000).click().perform(); // Задержка в 3 секунд (3000 миллисекунд)
+    public static void slowClick(SelenideAppiumElement element) {
+        actions().moveToElement(element).pause(5000).click().perform(); // Задержка в 5 секунд (3000 миллисекунд)
     }
 
     /**
@@ -167,7 +167,27 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
     }
 
     /**
+     * Метод для обращения по коллекции xpath
+     *
+     * @param xpath
+     * @return
+     */
+    public static SelenideAppiumCollection collectionByXpath(String xpath) {
+        return $$(xpath(xpath));
+    }
+
+    /**
      * Метод для обращения по xpath(resourceId)
+     *
+     * @param resourceId
+     * @return
+     */
+    public static SelenideAppiumElement elementByResourceId(String resourceId) {
+        return $x("//*[@resource-id='" + resourceId + "']");
+    }
+
+    /**
+     * Метод для обращения по коллекции xpath(resourceId)
      *
      * @param resourceId
      * @return
@@ -176,14 +196,25 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
         return $$(xpath("//*[@resource-id='" + resourceId + "']"));
     }
 
+
     /**
-     * Метод для обращения по xpath(className)
+     * Метод для обращения по коллекции xpath(className)
      *
      * @param className
      * @return
      */
     public static SelenideAppiumElement elementByClass(String className) {
         return $x("//" + className);
+    }
+
+    /**
+     * Метод для обращения по коллекции xpath(className)
+     *
+     * @param className
+     * @return
+     */
+    public static SelenideAppiumCollection collectionByClass(String className) {
+        return $$(xpath("//" + className));
     }
 
     /**

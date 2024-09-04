@@ -1,32 +1,18 @@
-//package pages;
-//
-//import static com.codeborne.selenide.Selenide.$;
-//import static com.codeborne.selenide.Selenide.$$;
-//import static config.ConfigReader.arnica;
-//import static config.ConfigReader.sqns;
-//import static driver.EmulatorHelper.androidScrollToAnElementBySecondTextWithClick;
-//import static driver.EmulatorHelper.androidScrollToAnElementByText;
-//import static driver.EmulatorHelper.androidScrollToAnElementByTextWithClick;
-//import static driver.EmulatorHelper.slowClick;
-//import static helper.DateHelper.dayOfMonth;
-//import static helper.DateHelper.yearWithMonthValue;
-//import static pages.SchedulePage.clickOnNewVisitInBtnPlus;
-//
-//import com.codeborne.selenide.Condition;
-//import com.codeborne.selenide.ElementsCollection;
-//import com.codeborne.selenide.SelenideElement;
-//
-//import io.appium.java_client.MobileBy;
-//import io.qameta.allure.Step;
-//
-//
-//public class VisitPage {
-//
-//    /**
-//     * Элементы календаря перед созданием Визита для Android Арника
-//     */
+package pages;
+
+import static driver.EmulatorHelper.elementByXpath;
+import static driver.EmulatorHelper.elementByXpathText;
+
+import com.codeborne.selenide.appium.SelenideAppiumElement;
+
+
+public class VisitPage {
+
+    /**
+     * Элементы календаря перед созданием Визита для Android Арника
+     */
 //    private static final SelenideElement btnBackDateVisit = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"назад\"]"));
-//    private static final SelenideElement textTitleCalendarVisit = $(MobileBy.xpath("//android.widget.TextView[@text=\"Дата посещения\"]"));
+    private static final SelenideAppiumElement textTitleCalendarVisit = elementByXpathText("Дата посещения");
 //    private static final SelenideElement textSelectDateVisit = $(MobileBy.xpath("//android.widget.TextView[@text=\"Выберите дату\"]"));
 //    private static final SelenideElement btnToDayDateVisit = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"сегодня\"]"));
 //    private static final ElementsCollection dayNamesSchedule = $$(MobileBy.xpath("//android.view.ViewGroup[@resource-id=\"undefined.item_\"" + yearWithMonthValue() + "\".header.dayNames\"]"));
@@ -44,11 +30,11 @@
 //    private static final ElementsCollection mainTimeStartVisitCollection = $$(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup"));
 //    private static final SelenideElement btnSetTimeManual = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Задать вручную\"]"));
 //
-//    /**
-//     * Основная страница раздела Визит для Android (Все продукты)
-//     * Новый визит
-//     */
-//    private static final SelenideElement textTitleNewVisitText = $(MobileBy.xpath("//android.widget.TextView[@text=\"Новый визит\"]"));
+    /**
+     * Основная страница раздела Визит для Android (Все продукты)
+     * Новый визит
+     */
+    private static final SelenideAppiumElement textTitleNewVisitText = elementByXpathText("Новый визит");
 //    private static final SelenideElement textDateAndTime = $(MobileBy.xpath("//android.widget.TextView[@text=\"Дата и время\"]"));
 //    private static final SelenideElement dateField = $(MobileBy.xpath("//android.widget.EditText[@resource-id=\"text-input-outlined\"]"));
 //    //    private static final SelenideElement timeField = $(MobileBy.xpath());
@@ -77,12 +63,12 @@
 //
 //    private static final SelenideElement btnStatusVisit = $(MobileBy.xpath("//android.view.ViewGroup[@content-desc=\"Визит не подтвержден\"]"));
 //    private static final SelenideElement btnSaveVisit = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Сохранить визит\"]"));
-//
-//    /**
-//     * Bottomsheet (всплывающее меню) Выберите клиента в визите для Android Арника
-//     */
+
+    /**
+     * Bottomsheet (всплывающее меню) Выберите клиента в визите для Android Арника
+     */
 //    private static final SelenideElement bottomsheetSelectClient = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]"));
-//    private static final SelenideElement btnBack = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[1]"));
+    private static final SelenideAppiumElement btnBack = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[1]");
 //    private static final SelenideElement textTitleSelectClient = $(MobileBy.xpath("//android.widget.TextView[@text=\"Выберите клиента\"]"));
 //    private static final SelenideElement btnSearchClient = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[2]"));
 //    private static final SelenideElement btnPlus = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.widget.Button"));
@@ -113,22 +99,22 @@
 //    public static final SelenideElement btnViewMoreVariable = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Показать больше вариантов\"]"));
 //    public static final SelenideElement numberCardField = $(MobileBy.xpath("//android.widget.EditText[@resource-id=\"text-input-outlined\" and @text=\" \"]"));
 //    public static final SelenideElement btnPay = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Оплатить\"]"));
-//
-//    /**
-//     * Геттеры для обращения к полям класса из тестов
-//     */
-//    public static final SelenideElement getBtnBack() {
-//        return btnBack;
-//    }
-//
-//    public static final SelenideElement getTextTitleNewVisitText() {
-//        return textTitleNewVisitText;
-//    }
-//
-//    public static final SelenideElement getTextTitleCalendarVisit() {
-//        return textTitleCalendarVisit;
-//    }
-//
+
+    /**
+     * Геттеры для обращения к полям класса из тестов
+     */
+    public static final SelenideAppiumElement getBtnBack() {
+        return btnBack;
+    }
+
+    public static final SelenideAppiumElement getTextTitleNewVisitText() {
+        return textTitleNewVisitText;
+    }
+
+    public static final SelenideAppiumElement getTextTitleCalendarVisit() {
+        return textTitleCalendarVisit;
+    }
+
 //    public static final SelenideElement getCheckBoxDirectoryService(String nameService) {
 //        return $(MobileBy.xpath("//android.view.ViewGroup[@content-desc=\"" + nameService + "\"]/android.view.ViewGroup/android.widget.Button"));
 //    }
@@ -240,4 +226,4 @@
 //        btnMainCashBox.should(Condition.visible).click();
 //        btnSaveVisit.should(Condition.visible).click();
 //    }
-//}
+}

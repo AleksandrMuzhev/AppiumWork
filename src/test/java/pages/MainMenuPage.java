@@ -5,33 +5,29 @@ import static com.codeborne.selenide.appium.AppiumSelectors.byText;
 import static com.codeborne.selenide.appium.SelenideAppium.$;
 import static config.ConfigReader.arnica;
 import static config.ConfigReader.sqns;
-import static driver.EmulatorHelper.collectionByXpath;
+import static driver.EmulatorHelper.elementByResourceId;
 import static driver.EmulatorHelper.elementByXpath;
 import static driver.EmulatorHelper.elementByXpathText;
 import static driver.EmulatorHelper.goBack;
-import static driver.EmulatorHelper.slowClick;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.appium.SelenideAppiumCollection;
 import com.codeborne.selenide.appium.SelenideAppiumElement;
 
 import java.time.Duration;
 
-import driver.EmulatorHelper;
 import io.qameta.allure.Step;
 
 /**
  * Главное меню приложения (в нижней части TabBar и основной список разделов в боковом меню)
  */
-public class MainMenuPage extends StartPage {
+public class MainMenuPage {
 
     //    /**
 //     * Элементы TabBar (в нижней части) для Android (Все продукты)
 //     */
 //    private static final SelenideAppiumCollection namesBtnTabBar = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup");
 //    private static final ElementsCollection iconBtnTabBar = $$(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]"));
-        private static final SelenideAppiumElement btnStatisticTabBar = elementByXpathText("Статистика");
-        private static final SelenideAppiumElement btnScheduleTabBar = elementByXpathText("Расписание");
+    private static final SelenideAppiumElement btnStatisticTabBar = elementByXpathText("Статистика");
+    private static final SelenideAppiumElement btnScheduleTabBar = elementByXpathText("Расписание");
 //    private static final SelenideElement btnStatisticTabBar = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.Button[1]"));
 //    private static final SelenideElement btnClientsTabBar = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.Button[3]"));
 //    private static final SelenideElement btnScheduleTabBar = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.Button[2]"));
@@ -84,18 +80,6 @@ public class MainMenuPage extends StartPage {
     /**
      * Геттеры для обращения к полям класса из тестов
      */
-//    public static SelenideElement getBtnCloseRate() {
-//        if (arnica) {
-//            return btnCloseRateA;
-//        } else if (sqns) {
-//            return btnCloseRateS;
-//        }
-//        return null;
-//    }
-    public static SelenideAppiumElement getNameBtnTabBar(String element) {
-        return elementByXpathText(element);
-    }
-
     @Step("Закрываем открывшееся всплывающее окно")
     public static void closePopUpMain() {
         if (arnica) {
@@ -103,7 +87,7 @@ public class MainMenuPage extends StartPage {
                 goBack();
             }
         } else if (sqns) {
-            $(byText("Напомнить позже")).shouldBe(visible, Duration.ofSeconds(15)).click();
+            elementByResourceId("com.medicalru.app.android:id/Напомнить позже-container").should(visible, Duration.ofSeconds(20)).click();
         }
     }
 //

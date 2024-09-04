@@ -29,7 +29,11 @@
 //    public void setUp() {
 //        authRegisterDate();
 //        closePopUpMain();
-//        androidScrollToAnElementByTextWithClick("Расписание");
+//        if (arnica) {
+//            elementByXpathText("Клиенты");
+//        } else if (sqns) {
+//            slowClick(elementByXpathText("Пациенты"));
+//        }
 //    }
 //
 //    @Description("Создание сложного визита")

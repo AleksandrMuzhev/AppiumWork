@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 import config.ConfigReader;
+import driver.EmulatorDriver;
 import io.qameta.allure.Allure;
 import io.qameta.allure.selenide.AllureSelenide;
 import listeners.AllureListener;
@@ -34,7 +35,7 @@ import listeners.AllureListener;
  * Базовый тестовый класс
  */
 @ExtendWith(AllureListener.class) //Расширяем класс с помощью класса AllureListener
-public class BaseTest { //Базовый класс для Android-эмулятора
+public class BaseTest extends EmulatorDriver { //Базовый класс для Android-эмулятора
 
     @BeforeAll //Аннотация для выполнения метода 1 раз перед запуском всех тестов
     public static void setup() {

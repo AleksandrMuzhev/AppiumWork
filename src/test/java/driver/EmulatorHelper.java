@@ -153,7 +153,7 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      * Метод для клика с задержкой
      */
     public static void slowClick(SelenideAppiumElement element) {
-        actions().moveToElement(element).pause(5000).click().perform(); // Задержка в 5 секунд (3000 миллисекунд)
+        actions().moveToElement(element).pause(5000).click().perform(); // Задержка в 5 секунд (5000 миллисекунд)
     }
 
     /**
@@ -198,7 +198,7 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
 
 
     /**
-     * Метод для обращения по коллекции xpath(className)
+     * Метод для обращения по className
      *
      * @param className
      * @return
@@ -208,7 +208,7 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
     }
 
     /**
-     * Метод для обращения по коллекции xpath(className)
+     * Метод для обращения по коллекции className
      *
      * @param className
      * @return
@@ -218,7 +218,7 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
     }
 
     /**
-     * Метод для обращения по xpath(className)
+     * Метод для обращения по xpath(text)
      *
      * @param text
      * @return
@@ -228,7 +228,17 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
     }
 
     /**
-     * Метод для обращения по xpath(className)
+     * Метод для обращения по коллекции xpath(text)
+     *
+     * @param text
+     * @return
+     */
+    public static SelenideAppiumCollection collectionByXpathText(String text) {
+        return $$(xpath("//*[@text='" + text + "']"));
+    }
+
+    /**
+     * Метод для обращения по xpath(contentDesc)
      *
      * @param contentDesc
      * @return
@@ -238,7 +248,7 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
     }
 
     /**
-     * Метод для обращения по xpath(className)
+     * Метод для обращения по id
      *
      * @param id
      * @return

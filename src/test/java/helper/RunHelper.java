@@ -24,7 +24,7 @@ public class RunHelper {
      *
      * @return
      */
-    public static Class<?> getDriverClass() {
+    public Class<?> getDriverClass() {
         String deviceHost = ConfigReader.testConfig.deviceHost(); //Считываем deviceHost из test.properties
 
         switch (deviceHost) { //через switch определяем.

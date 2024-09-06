@@ -11,12 +11,11 @@ import static driver.EmulatorHelper.elementByContentDesc;
 import static driver.EmulatorHelper.elementByResourceId;
 import static driver.EmulatorHelper.elementByXpath;
 import static driver.EmulatorHelper.elementByXpathText;
-import static driver.EmulatorHelper.swipeToRefresh;
+import static driver.EmulatorHelper.swipe;
 import static helper.DateHelper.dayOfMonth;
 import static helper.DateHelper.dayOfMonthCurrent;
 import static helper.DateHelper.dayOfMonthNext;
 import static helper.DateHelper.dayOfMonthPrev;
-import static pages.VisitPage.getBtnBack;
 
 import com.codeborne.selenide.appium.SelenideAppiumCollection;
 import com.codeborne.selenide.appium.SelenideAppiumElement;
@@ -24,104 +23,114 @@ import com.codeborne.selenide.appium.SelenideAppiumElement;
 import java.time.Duration;
 
 import io.qameta.allure.Step;
+import lombok.Getter;
 
 public class SchedulePage {
 
     /**
      * Основная страница раздела Расписание для Android (Все продукты)
      */
-    private static final SelenideAppiumElement textTitleSchedule = elementByXpathText("Расписание");
-    private static final SelenideAppiumElement enterFilter = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[1]");
-    private static final SelenideAppiumElement configTable = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[2]");
-    private static final SelenideAppiumElement configFilter = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[3]");
+    private final SelenideAppiumElement textTitleSchedule = elementByXpathText("Расписание");
+    private final SelenideAppiumElement enterFilter = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[1]");
+    private final SelenideAppiumElement configTable = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[2]");
+    private final SelenideAppiumElement configFilter = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[3]");
 
-    private static final SelenideAppiumCollection employeesSchedule = collectionByXpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup/android.widget.HorizontalScrollView/android.view.ViewGroup/android.view.ViewGroup[1]");
-    private static final SelenideAppiumElement textCabinet = elementByXpathText("Кабинет");
-    private static final SelenideAppiumElement spinnerForUpdate = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.ImageView");
-    private static final SelenideAppiumElement mainContentForSwipe = elementByClass("android.widget.ScrollView");
+    private final SelenideAppiumCollection employeesSchedule = collectionByXpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup/android.widget.HorizontalScrollView/android.view.ViewGroup/android.view.ViewGroup[1]");
+    @Getter
+    private final SelenideAppiumElement textCabinet = elementByXpathText("Кабинет");
+    private final SelenideAppiumElement spinnerForUpdate = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.widget.ImageView");
+    @Getter
+    private final SelenideAppiumElement mainContentForSwipe = elementByClass("android.widget.ScrollView");
 
-    private static final SelenideAppiumCollection btnCollectionDaysSchedule = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.widget.HorizontalScrollView/android.view.ViewGroup");
-    private static final SelenideAppiumElement btnSelectDayPrevMonth = elementByXpathText(dayOfMonthPrev());
-    private static final SelenideAppiumElement btnSelectDayNextMonth = elementByXpathText(dayOfMonthNext());
-    private static final SelenideAppiumElement btnSelectCurrentDay = elementByXpathText(dayOfMonthCurrent());
+    private final SelenideAppiumCollection btnCollectionDaysSchedule = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.widget.HorizontalScrollView/android.view.ViewGroup");
+    @Getter
+    private final SelenideAppiumElement btnSelectDayPrevMonth = elementByXpathText(dayOfMonthPrev());
+    @Getter
+    private final SelenideAppiumElement btnSelectDayNextMonth = elementByXpathText(dayOfMonthNext());
+    private final SelenideAppiumElement btnSelectCurrentDay = elementByXpathText(dayOfMonthCurrent());
     /**
      * Основная страница раздела Расписание для Android Арника
      */
-    private static final SelenideAppiumElement calendarBtnA = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.widget.Button");
-    private static final SelenideAppiumElement btnSwitchCurrentDayScheduleA = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.widget.Button");
+    private final SelenideAppiumElement calendarBtnA = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.widget.Button");
+    private final SelenideAppiumElement btnSwitchCurrentDayScheduleA = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.widget.Button");
     /**
      * Основная страница раздела Расписание для Android SQNS
      */
-    private static final SelenideAppiumElement calendarBtnS = elementByXpath("(//android.widget.Button[@resource-id=\"icon-button\"])[4]");
-    private static final SelenideAppiumElement btnSwitchCurrentDayScheduleS = elementByXpath("(//android.widget.Button[@resource-id=\"icon-button\"])[5]");
+    private final SelenideAppiumElement calendarBtnS = elementByXpath("(//android.widget.Button[@resource-id=\"icon-button\"])[4]");
+    private final SelenideAppiumElement btnSwitchCurrentDayScheduleS = elementByXpath("(//android.widget.Button[@resource-id=\"icon-button\"])[5]");
 
     /**
      * Элементы настройки фильтра в Расписании для Android Арника
      */
-    private static final SelenideAppiumElement titleFilterConfigSchedule = elementByXpathText("Фильтр");
-    private static final SelenideAppiumElement btnCloseConfigFilter = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.widget.Button");
-    private static final SelenideAppiumElement textViewInSchedule = elementByXpathText("Показывать в расписании\"]");
-    private static final SelenideAppiumCollection btnCollectionViewInSchedule = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]");
-    private static final SelenideAppiumElement textViewPosition = elementByXpathText("Отображаемые должности");
-    private static final SelenideAppiumCollection btnCollectionViewPosition = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.widget.ScrollView/android.view.ViewGroup");
-    private static final SelenideAppiumElement btnApplyFilter = elementByXpathText("Применить фильтр");
-    private static final SelenideAppiumElement btnResetFilter = elementByXpathText("Сбросить");
+    private final SelenideAppiumElement titleFilterConfigSchedule = elementByXpathText("Фильтр");
+    private final SelenideAppiumElement btnCloseConfigFilter = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.widget.Button");
+    private final SelenideAppiumElement textViewInSchedule = elementByXpathText("Показывать в расписании\"]");
+    private final SelenideAppiumCollection btnCollectionViewInSchedule = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]");
+    private final SelenideAppiumElement textViewPosition = elementByXpathText("Отображаемые должности");
+    private final SelenideAppiumCollection btnCollectionViewPosition = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.widget.ScrollView/android.view.ViewGroup");
+    private final SelenideAppiumElement btnApplyFilter = elementByXpathText("Применить фильтр");
+    private final SelenideAppiumElement btnResetFilter = elementByXpathText("Сбросить");
 
     /**
      * Элементы календаря в Расписании для Android Арника
      */
-    private static final SelenideAppiumElement titleCalendarSchedule = elementByXpathText("Выберите дату\"]");
-    private static final SelenideAppiumElement btnCloseCalendar = elementByXpathText("uDB80\uDD56");
-    private static final SelenideAppiumElement titleDate = elementByResourceId("undefined.header.title");
-    private static final SelenideAppiumElement leftArrow = elementByXpath("//android.view.ViewGroup[@resource-id=\"undefined.header.leftArrow\"]/android.widget.ImageView");
-    private static final SelenideAppiumElement rightArrow = elementByXpath("//android.view.ViewGroup[@resource-id=\"undefined.header.rightArrow\"]/android.widget.ImageView");
-    private static final SelenideAppiumCollection dayNamesSchedule = collectionByResourceId("undefined.header.dayNames");
-    private static final SelenideAppiumCollection daysSchedule = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup");
-    private static final SelenideAppiumElement numberDayCalendar = elementByXpath("//android.widget.TextView[@text=\"" + dayOfMonth() + "\"]");
+    private final SelenideAppiumElement titleCalendarSchedule = elementByXpathText("Выберите дату\"]");
+    private final SelenideAppiumElement btnCloseCalendar = elementByXpathText("uDB80\uDD56");
+    private final SelenideAppiumElement titleDate = elementByResourceId("undefined.header.title");
+    private final SelenideAppiumElement leftArrow = elementByXpath("//android.view.ViewGroup[@resource-id=\"undefined.header.leftArrow\"]/android.widget.ImageView");
+    private final SelenideAppiumElement rightArrow = elementByXpath("//android.view.ViewGroup[@resource-id=\"undefined.header.rightArrow\"]/android.widget.ImageView");
+    private final SelenideAppiumCollection dayNamesSchedule = collectionByResourceId("undefined.header.dayNames");
+    private final SelenideAppiumCollection daysSchedule = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup");
+    private final SelenideAppiumElement numberDayCalendar = elementByXpath("//android.widget.TextView[@text=\"" + dayOfMonth() + "\"]");
 
     /**
      * Bottosheet (всплывающее меню) сотрудника в расписании
      */
-    private static final SelenideAppiumElement popUpEmployeeSchedule = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup");
-    private static final SelenideAppiumElement btnClosePopupSchedule = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.widget.Button");
-    private static final SelenideAppiumElement infoSchedulePopupEmployee = elementByXpath("(//android.view.ViewGroup[@content-desc=\"НА, Никонова Анастасия , Директор\"])[1]");
-    private static final SelenideAppiumElement firstActionTextSchedule = elementByXpathText("Быстрые действия\"]");
-    private static final SelenideAppiumElement btnChangeEmployeeSchedule = elementByXpathText("Изменить сотрудника");
-    private static final SelenideAppiumElement btnCallEmployeeSchedule = elementByXpathText("Позвонить");
-    private static final SelenideAppiumElement timetableScheduleText = elementByXpathText("График");
-    private static final SelenideAppiumElement btnPauses = elementByXpathText("Перерывы");
-    private static final SelenideAppiumElement btnCancelWordDay = elementByXpathText("Отменить смену");
-    private static final SelenideAppiumElement btnScheduleOnWeek = elementByXpathText("Расписание на неделю");
+    private final SelenideAppiumElement popUpEmployeeSchedule = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup");
+    private final SelenideAppiumElement btnClosePopupSchedule = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.widget.Button");
+    private final SelenideAppiumElement infoSchedulePopupEmployee = elementByXpath("(//android.view.ViewGroup[@content-desc=\"НА, Никонова Анастасия , Директор\"])[1]");
+    private final SelenideAppiumElement firstActionTextSchedule = elementByXpathText("Быстрые действия\"]");
+    private final SelenideAppiumElement btnChangeEmployeeSchedule = elementByXpathText("Изменить сотрудника");
+    private final SelenideAppiumElement btnCallEmployeeSchedule = elementByXpathText("Позвонить");
+    private final SelenideAppiumElement timetableScheduleText = elementByXpathText("График");
+    private final SelenideAppiumElement btnPauses = elementByXpathText("Перерывы");
+    private final SelenideAppiumElement btnCancelWordDay = elementByXpathText("Отменить смену");
+    private final SelenideAppiumElement btnScheduleOnWeek = elementByXpathText("Расписание на неделю");
 
     /**
      * Элементы расписания на неделю
      */
-    private static final SelenideAppiumElement mondayText = elementByXpathText("Понедельник");
+    @Getter
+    private final SelenideAppiumElement mondayText = elementByXpathText("Понедельник");
 
     /**
      * Bottosheet (всплывающее меню) после нажатия на время в расписании
      */
-    private static final SelenideAppiumElement titleBorrowTime = elementByXpathText("Занять время");
-    private static final SelenideAppiumElement btnSelect = elementByContentDesc("Выбрать");
+    private final SelenideAppiumElement titleBorrowTime = elementByXpathText("Занять время");
+    private final SelenideAppiumElement btnSelect = elementByContentDesc("Выбрать");
 
     /**
      * Элементы кнопки "+" в Расписании для Android Арника
      */
-    private static final SelenideAppiumElement btnPlus = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.widget.Button");
-    private static final SelenideAppiumCollection bottomSheetOverPlus = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]");
-    private static final SelenideAppiumElement btnAddEmployee = elementByXpathText("Добавить сотрудника");
-    private static final SelenideAppiumElement btnNewVisit = elementByXpathText("Новый визит");
-    private static final SelenideAppiumElement titleSelectEmployeeSchedule = elementByXpathText("Выберите сотрудника");
+    private final SelenideAppiumElement btnPlus = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.widget.Button");
+    private final SelenideAppiumCollection bottomSheetOverPlus = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]");
+    private final SelenideAppiumElement btnAddEmployee = elementByXpathText("Добавить сотрудника");
+    private final SelenideAppiumElement btnNewVisit = elementByXpathText("Новый визит");
+    @Getter
+    private final SelenideAppiumElement titleSelectEmployeeSchedule = elementByXpathText("Выберите сотрудника");
 
     /**
-     * Геттеры для обращения к полям класса из тестов
+     * Конструктор на проверку видимости загрузки страницы
      */
-
-    public static SelenideAppiumElement getMondayText() {
-        return mondayText;
+    public SchedulePage() {
+        textTitleSchedule.shouldBe(visible);
     }
 
-    public static SelenideAppiumElement getBtnPlus() {
+    /**
+     * Геттеры с условиями по разнице продуктов
+     */
+
+    public SelenideAppiumElement getBtnPlus() {
         if (arnica) {
             return btnPlus;
         } else if (sqns) {
@@ -130,7 +139,7 @@ public class SchedulePage {
         return null;
     }
 
-    public static SelenideAppiumElement getConfigFilter() {
+    public SelenideAppiumElement getConfigFilter() {
         if (arnica) {
             return configFilter;
         } else if (sqns) {
@@ -139,15 +148,7 @@ public class SchedulePage {
         return null;
     }
 
-    public static SelenideAppiumElement getBtnSelectDayPrevMonth() {
-        return btnSelectDayPrevMonth;
-    }
-
-    public static SelenideAppiumElement getBtnSelectDayNextMonth() {
-        return btnSelectDayNextMonth;
-    }
-
-    public static SelenideAppiumElement getBtnSwitchCurrentDaySchedule() {
+    public SelenideAppiumElement getBtnSwitchCurrentDaySchedule() {
         if (arnica) {
             return (SelenideAppiumElement) btnSwitchCurrentDayScheduleA.should(visible);
         } else if (sqns) {
@@ -156,19 +157,7 @@ public class SchedulePage {
         return null;
     }
 
-    public static SelenideAppiumElement getTitleSelectEmployeeSchedule() {
-        return titleSelectEmployeeSchedule;
-    }
-
-    public static SelenideAppiumElement getTextCabinet() {
-        return textCabinet;
-    }
-
-    public static SelenideAppiumElement getMainContentForSwipe() {
-        return mainContentForSwipe;
-    }
-
-    public static SelenideAppiumElement getCalendarBtn() {
+    public SelenideAppiumElement getCalendarBtn() {
         if (arnica) {
             return calendarBtnA;
         } else if (sqns) {
@@ -181,56 +170,63 @@ public class SchedulePage {
      * Готовые шаги для применения в тестах
      */
     @Step("Переключаем календарь на месяц назад")
-    public static void prevSwitchCalendar() {
+    public SchedulePage prevSwitchCalendar() {
         getCalendarBtn().should(visible).click();
         leftArrow.should(visible).click();
         numberDayCalendar.should(visible).click();
+        return new SchedulePage();
     }
 
     @Step("Переключаем календарь на месяц вперед")
-    public static void nextSwitchCalendar() {
+    public SchedulePage nextSwitchCalendar() {
         getCalendarBtn().should(visible).click();
         rightArrow.should(visible).click();
         numberDayCalendar.should(visible).click();
+        return new SchedulePage();
     }
 
     @Step("Просмотр расписания сотрудника по неделям")
-    public static void viewScheduleByWeek() {
+    public SchedulePage viewScheduleByWeek() {
         employeesSchedule.get(0).click();
         elementByXpathText("Расписание на неделю").click();
+        return new SchedulePage();
     }
 
     @Step("Нажимаем на Новый визит в кнопке Плюс из Расписания")
-    public static void clickOnNewVisitInBtnPlus() {
+    public SchedulePage clickOnNewVisitInBtnPlus() {
         getBtnPlus().should(visible, Duration.ofSeconds(5)).click();
         btnNewVisit.should(visible).click();
+        return new SchedulePage();
     }
 
     @Step("Нажимаем на Добавление сотрудника в кнопке Плюс из Расписания")
-    public static void clickOnAddEmployeeInBtnPlus() {
+    public SelectEmployeePage clickOnAddEmployeeInBtnPlus() {
         getBtnPlus().should(visible).click();
         btnAddEmployee.should(visible).click();
+        return new SelectEmployeePage();
     }
 
     @Step("Открываем форму создания визита через нажатие на свободное время")
-    public static void createVisitClickOnFreedomTime() {
-        collectionByXpathText("10:00").first().should(visible).click();
+    public VisitPage createVisitClickOnFreedomTime(String time) {
+        collectionByXpathText(time).first().should(visible).click();
         btnSelect.should(visible).click();
-        if (arnica) {
-            getBtnBack().click();
-        }
+        return new VisitPage();
     }
 
 
     @Step("Переходим в настройки фильтра Расписания и выбираем Кабинеты")
-    public static void goToConfigFilterScheduleSelectCabinets() {
+    public SchedulePage goToConfigFilterScheduleSelectCabinets() {
         getConfigFilter().should(visible).click();
         elementByXpathText("Кабинеты").click();
         btnApplyFilter.should(visible).click();
+        return new SchedulePage();
     }
 
     @Step("Тянем страницу Расписания для обновления")
-    public static void updateScheduleSwipe() {
-        swipeToRefresh(mainContentForSwipe, "down", 50);
+    public SchedulePage updateScheduleSwipe() {
+        swipe(mainContentForSwipe, "down", 50);
+        return new SchedulePage();
     }
+
+
 }

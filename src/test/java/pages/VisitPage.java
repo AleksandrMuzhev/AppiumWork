@@ -1,177 +1,192 @@
 package pages;
 
+import static com.codeborne.selenide.Condition.visible;
+import static config.ConfigReader.arnica;
+import static driver.EmulatorHelper.collectionByResourceId;
+import static driver.EmulatorHelper.collectionByXpath;
+import static driver.EmulatorHelper.elementByClass;
+import static driver.EmulatorHelper.elementByContentDesc;
+import static driver.EmulatorHelper.elementByResourceId;
 import static driver.EmulatorHelper.elementByXpath;
 import static driver.EmulatorHelper.elementByXpathText;
+import static driver.EmulatorHelper.slowClick;
+import static driver.EmulatorHelper.swipe;
+import static helper.DateHelper.dayOfMonth;
+import static helper.DateHelper.yearWithMonthValue;
 
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.appium.SelenideAppiumCollection;
 import com.codeborne.selenide.appium.SelenideAppiumElement;
+
+import io.qameta.allure.Step;
+import lombok.Getter;
 
 
 public class VisitPage {
+    SchedulePage schedulePage;
 
     /**
      * Элементы календаря перед созданием Визита для Android Арника
      */
-//    private static final SelenideElement btnBackDateVisit = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"назад\"]"));
-    private static final SelenideAppiumElement textTitleCalendarVisit = elementByXpathText("Дата посещения");
-//    private static final SelenideElement textSelectDateVisit = $(MobileBy.xpath("//android.widget.TextView[@text=\"Выберите дату\"]"));
-//    private static final SelenideElement btnToDayDateVisit = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"сегодня\"]"));
-//    private static final ElementsCollection dayNamesSchedule = $$(MobileBy.xpath("//android.view.ViewGroup[@resource-id=\"undefined.item_\"" + yearWithMonthValue() + "\".header.dayNames\"]"));
-//    private static final SelenideElement numberDayCalendar = $(MobileBy.xpath("(//android.widget.TextView[@text=\"" + dayOfMonth() + "\"])[1]"));
-//
-//    /**
-//     * Элементы Время начала перед созданием Визита для Android Арника
-//     */
-//    private static final SelenideElement textTitleTimeStartVisit = $(MobileBy.xpath("//android.widget.TextView[@text=\"Время начала\"]"));
-//    private static final SelenideElement textSelectTimeStartVisit = $(MobileBy.xpath("//android.widget.TextView[@text=\"Выберите или укажите\"]"));
-//    private static final SelenideElement btnNowVisit = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"сейчас\"]"));
-//    private static final SelenideElement textNameEmployee = $(MobileBy.xpath("//android.widget.TextView[@text=\"Стефанив Ольга Валерьевна \"]"));
-//    private static final SelenideElement textPositionEmployee = $(MobileBy.xpath("//android.widget.TextView[@text=\"Мастер маникюра / педикюра / подолог\"]"));
-//    private static final SelenideElement textDescriptionTimeFromTo = $(MobileBy.xpath("//android.widget.TextView[@text=\"Время с 09:00 по 19:00\"]"));
-//    private static final ElementsCollection mainTimeStartVisitCollection = $$(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup"));
-//    private static final SelenideElement btnSetTimeManual = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Задать вручную\"]"));
-//
+    private final SelenideAppiumElement btnBackDateVisit = elementByContentDesc("назад");
+    @Getter
+    private final SelenideAppiumElement textTitleCalendarVisit = elementByXpathText("Дата посещения");
+    private final SelenideAppiumElement textSelectDateVisit = elementByXpathText("Выберите дату\"]");
+    private final SelenideAppiumElement btnToDayDateVisit = elementByContentDesc("сегодня");
+    private final SelenideAppiumCollection dayNamesSchedule = collectionByXpath("//android.view.ViewGroup[@resource-id=\"undefined.item_\"" + yearWithMonthValue() + "\".header.dayNames\"]");
+    private final SelenideAppiumElement numberDayCalendar = elementByXpath("(//android.widget.TextView[@text=\"" + dayOfMonth() + "\"])[1]");
+
+    /**
+     * Элементы Время начала перед созданием Визита для Android Арника
+     */
+    private final SelenideAppiumElement textTitleTimeStartVisit = elementByXpathText("Время начала");
+    private final SelenideAppiumElement textSelectTimeStartVisit = elementByXpathText("Выберите или укажите");
+    private final SelenideAppiumElement btnNowVisit = elementByContentDesc("сейчас");
+    private final SelenideAppiumElement textNameEmployee = elementByXpathText("Стефанив Ольга Валерьевна");
+    private final SelenideAppiumElement textPositionEmployee = elementByXpathText("Мастер маникюра / педикюра / подолог\"]");
+    private final SelenideAppiumElement textDescriptionTimeFromTo = elementByXpathText("Время с 09:00 по 19:00");
+    private final SelenideAppiumCollection mainTimeStartVisitCollection = collectionByXpath("//android.widget.ScrollView/android.view.ViewGroup");
+    private final SelenideAppiumElement btnSetTimeManual = elementByContentDesc("Задать вручную");
+
     /**
      * Основная страница раздела Визит для Android (Все продукты)
      * Новый визит
      */
-    private static final SelenideAppiumElement textTitleNewVisitText = elementByXpathText("Новый визит");
-//    private static final SelenideElement textDateAndTime = $(MobileBy.xpath("//android.widget.TextView[@text=\"Дата и время\"]"));
-//    private static final SelenideElement dateField = $(MobileBy.xpath("//android.widget.EditText[@resource-id=\"text-input-outlined\"]"));
-//    //    private static final SelenideElement timeField = $(MobileBy.xpath());
-//    private static final SelenideElement btnWidgetCalendar = $(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button"));
-//    private static final SelenideElement getBtnWidgetTime = $(MobileBy.xpath("//android.widget.TextView[@text=\"\uDB82\uDD54\"]"));
-//    private static final SelenideElement textTitleVisitor = $(MobileBy.xpath("//android.widget.TextView[@text=\"Посетитель\"]"));
-//    private static final SelenideElement btnAddVisitor = $(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.widget.Button"));
-//    private static final SelenideElement textTitleServices = $(MobileBy.xpath("//android.widget.TextView[@text=\"Услуги\"]"));
-//    private static final SelenideElement btnAddServices = $(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup/android.view.ViewGroup/android.widget.Button"));
-//    private static final SelenideElement visitContentForSwipe = $(MobileBy.xpath("//android.widget.ScrollView"));
-//
-//    private static final SelenideElement btnListSales = $(MobileBy.xpath("//android.view.ViewGroup[@content-desc=\"Продажа\"]/android.widget.Button"));
-//    private static final SelenideElement textListSales = $(MobileBy.xpath("//android.widget.TextView[@text=\"Продажа\"]"));
-//    private static final ElementsCollection collectionBtnSaleInVisit = $$(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]"));
-//    private static final SelenideElement btnAddCommodity = $(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup/android.widget.Button"));
-//    private static final SelenideElement btnAddCertificate = $(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup/android.widget.Button"));
-//    private static final SelenideElement btnAddSubscription = $(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup[2]/android.view.ViewGroup[3]/android.view.ViewGroup/android.widget.Button"));
-//
-//    private static final SelenideElement textTitleCommentAndAttachments = $(MobileBy.xpath("//android.widget.TextView[@text=\"Комментарии и вложения\"]"));
-//    private static final SelenideElement btnListCommentAndAttachments = $(MobileBy.xpath("//android.view.ViewGroup[@content-desc=\"Комментарии и вложения\"]/android.widget.Button"));
-//    private static final SelenideElement btnAddAttachments = $(MobileBy.xpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup/android.widget.Button"));
-//    private static final SelenideElement commentField = $(MobileBy.xpath("//android.widget.EditText[@resource-id=\"text-input-flat\"]"));
-//
-//    private static final SelenideElement textPaymentNotAvailabel = $(MobileBy.xpath("//android.widget.TextView[@text=\"Оплаты недоступны\"]"));
-//    private static final SelenideElement btnClientCame = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Клиент пришел\"]"));
-//
-//    private static final SelenideElement btnStatusVisit = $(MobileBy.xpath("//android.view.ViewGroup[@content-desc=\"Визит не подтвержден\"]"));
-//    private static final SelenideElement btnSaveVisit = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Сохранить визит\"]"));
+    @Getter
+    private final SelenideAppiumElement textTitleNewVisitText = elementByXpathText("Новый визит");
+    private final SelenideAppiumElement textDateAndTime = elementByXpathText("Дата и время\"]");
+    private final SelenideAppiumElement dateField = elementByResourceId("text-input-outlined");
+    private final SelenideAppiumElement btnWidgetCalendar = elementByXpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button");
+    private final SelenideAppiumElement btnWidgetTime = elementByXpathText("\uDB82\uDD54\"]");
+    private final SelenideAppiumElement textTitleVisitor = elementByXpathText("Посетитель");
+    private final SelenideAppiumElement btnAddVisitor = elementByXpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.widget.Button");
+    private final SelenideAppiumElement textTitleServices = elementByXpathText("Услуги");
+    private final SelenideAppiumElement btnAddServices = elementByXpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup/android.view.ViewGroup/android.widget.Button");
+    private final SelenideAppiumElement visitContentForSwipe = elementByClass("android.widget.ScrollView");
+
+    private final SelenideAppiumElement btnListSales = elementByXpath("//android.view.ViewGroup[@content-desc=\"Продажа\"]/android.widget.Button");
+    private final SelenideAppiumElement textListSales = elementByXpathText("Продажа");
+    private final SelenideAppiumCollection collectionBtnSaleInVisit = collectionByXpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]");
+    private final SelenideAppiumElement btnAddCommodity = elementByXpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup/android.widget.Button");
+    private final SelenideAppiumElement btnAddCertificate = elementByXpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup/android.widget.Button");
+    private final SelenideAppiumElement btnAddSubscription = elementByXpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup[2]/android.view.ViewGroup[3]/android.view.ViewGroup/android.widget.Button");
+
+    private final SelenideAppiumElement textTitleCommentAndAttachments = elementByXpathText("Комментарии и вложения");
+    private final SelenideAppiumElement btnListCommentAndAttachments = elementByXpath("//android.view.ViewGroup[@content-desc=\"Комментарии и вложения\"]/android.widget.Button");
+    private final SelenideAppiumElement btnAddAttachments = elementByXpath("//android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup[1]/android.view.ViewGroup/android.widget.Button");
+    private final SelenideAppiumElement commentField = elementByResourceId("text-input-flat");
+
+    private final SelenideAppiumElement textPaymentNotAvailabel = elementByXpathText("Оплаты недоступны");
+    private final SelenideAppiumElement btnClientCame = elementByContentDesc("Клиент пришел");
+
+    private final SelenideAppiumElement btnStatusVisit = elementByContentDesc("Визит не подтвержден");
+    private final SelenideAppiumElement btnSaveVisit = elementByContentDesc("Сохранить визит");
 
     /**
      * Bottomsheet (всплывающее меню) Выберите клиента в визите для Android Арника
      */
-//    private static final SelenideElement bottomsheetSelectClient = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]"));
-    private static final SelenideAppiumElement btnBack = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[1]");
-//    private static final SelenideElement textTitleSelectClient = $(MobileBy.xpath("//android.widget.TextView[@text=\"Выберите клиента\"]"));
-//    private static final SelenideElement btnSearchClient = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[2]"));
-//    private static final SelenideElement btnPlus = $(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.widget.Button"));
-//    private static final SelenideElement searchClientField = $(MobileBy.xpath("//android.widget.EditText[@text=\"ФИО посетителя\"]"));
-//    private static final SelenideElement btnAddNewClient = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Добавить нового клиента\"]"));
-//    private static final SelenideElement btnImportContacts = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Импортировать из контактов\"]"));
-//
-//    /**
-//     * Bottomsheet (всплывающее меню) Выберите клиента в визите для Android Арника
-//     */
-//    private static final ElementsCollection collectionServiceCatalog = $$(MobileBy.xpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]"));
-//
-//    /**
-//     * Попап "Статус визита"
-//     */
-//    public static final SelenideElement textTitleStatusVisit = $(MobileBy.xpath("//android.widget.TextView[@text=\"Cтатус визита\"]"));
-//    public static final SelenideElement btnSelectStatus = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Выбрать\"]"));
-//    public static final SelenideElement btnCancelStatus = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Отмена\"]"));
-//
-//    /**
-//     * Плашка "Добавить оплату" и далее форма "Оплата визита" для Android Арника
-//     */
-//    public static final SelenideElement btnAddPayment = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Добавить оплату\"]"));
-//    public static final SelenideElement textTitlePaymentVisit = $(MobileBy.xpath("//android.widget.TextView[@text=\"Оплата визита\"]"));
-//    public static final SelenideElement sumPaymentField = $(MobileBy.xpath("//android.widget.EditText[@resource-id=\"text-input-outlined\" and @text=\"1000\"]"));
-//    public static final SelenideElement btnMainCashBox = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Основная касса\"]"));
-//    public static final SelenideElement btnMainCurrentAccount = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Основной расчетный счет\"]"));
-//    public static final SelenideElement btnViewMoreVariable = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Показать больше вариантов\"]"));
-//    public static final SelenideElement numberCardField = $(MobileBy.xpath("//android.widget.EditText[@resource-id=\"text-input-outlined\" and @text=\" \"]"));
-//    public static final SelenideElement btnPay = $(MobileBy.xpath("//android.widget.Button[@content-desc=\"Оплатить\"]"));
+    private final SelenideAppiumElement bottomsheetSelectClient = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]");
+    @Getter
+    private final SelenideAppiumElement btnBack = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[1]");
+    private final SelenideAppiumElement textTitleSelectClient = elementByXpathText("Выберите клиента");
+    private final SelenideAppiumElement btnSearchClient = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[2]");
+    private final SelenideAppiumElement btnPlus = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.widget.Button");
+    private final SelenideAppiumElement searchClientField = elementByXpathText("ФИО посетителя");
+    private final SelenideAppiumElement btnAddNewClient = elementByContentDesc("Добавить нового клиента");
+    private final SelenideAppiumElement btnImportContacts = elementByContentDesc("Импортировать из контактов");
 
     /**
-     * Геттеры для обращения к полям класса из тестов
+     * Bottomsheet (всплывающее меню) Выберите клиента в визите для Android Арника
      */
-    public static final SelenideAppiumElement getBtnBack() {
-        return btnBack;
+    private final SelenideAppiumCollection collectionServiceCatalog = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[5]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]");
+
+    /**
+     * Попап "Статус визита"
+     */
+    public final SelenideAppiumElement textTitleStatusVisit = elementByXpathText("Cтатус визита");
+    public final SelenideAppiumElement btnSelectStatus = elementByContentDesc("Выбрать");
+    public final SelenideAppiumElement btnCancelStatus = elementByContentDesc("Отмена");
+
+    /**
+     * Плашка "Добавить оплату" и далее форма "Оплата визита" для Android Арника
+     */
+    public final SelenideAppiumElement btnAddPayment = elementByContentDesc("Добавить оплату");
+    public final SelenideAppiumElement textTitlePaymentVisit = elementByXpathText("Оплата визита");
+    public final SelenideAppiumCollection paymentFields = collectionByResourceId("text-input-outlined");
+    public final SelenideAppiumElement btnMainCashBox = elementByContentDesc("Основная касса");
+    public final SelenideAppiumElement btnMainCurrentAccount = elementByContentDesc("Основной расчетный счет]");
+    public final SelenideAppiumElement btnViewMoreVariable = elementByContentDesc("Показать больше вариантов\"]");
+    public final SelenideAppiumElement btnPay = elementByContentDesc("Оплатить");
+
+    /**
+     * Конструктор для инициализации страницы
+     */
+    public VisitPage() {
+        if (arnica) {
+            btnBack.click();
+        }
     }
 
-    public static final SelenideAppiumElement getTextTitleNewVisitText() {
-        return textTitleNewVisitText;
+    /**
+     * Геттеры с условиями по разнице продуктов
+     */
+    public final SelenideAppiumElement getCheckBoxDirectoryService(String nameService) {
+        return elementByXpath("//android.view.ViewGroup[@content-desc=\"" + nameService + "\"]/android.view.ViewGroup/android.widget.Button");
     }
 
-    public static final SelenideAppiumElement getTextTitleCalendarVisit() {
-        return textTitleCalendarVisit;
+    public final SelenideAppiumElement getCatalogService(String nameService) {
+        return elementByXpath("//android.view.ViewGroup[@content-desc=\"" + nameService + "\"]");
     }
 
-//    public static final SelenideElement getCheckBoxDirectoryService(String nameService) {
-//        return $(MobileBy.xpath("//android.view.ViewGroup[@content-desc=\"" + nameService + "\"]/android.view.ViewGroup/android.widget.Button"));
-//    }
-//
-//    public static final SelenideElement getCatalogService(String nameService) {
-//        return $(MobileBy.xpath("//android.view.ViewGroup[@content-desc=\"" + nameService + "\"]"));
-//    }
-//
-//    public static SelenideElement getTimeStartVisit() {
-//        SelenideElement targetElement = mainTimeStartVisitCollection.stream()
-//                .filter(element -> "09:00".equals(element.getAttribute("content-desc")))
-//                .findFirst()
-//                .orElse(null);
-//        return targetElement;
-//    }
-//
-//    /**
-//     * Готовые шаги для применения в тестах
-//     */
-//
-//    @Step("Если список Продажа скрыт, то кликаем для раскрытия")
-//    public static void openBtnListSales() {
-//        while (!textListSales.exists()) {
-//            androidScrollToAnElementByText("Продажа");
-//            if (textListSales.exists()) {
-//                break;
-//            }
-//        }
-//        if (!btnAddCommodity.exists()) {
-//            slowClick(btnListSales);
-//        }
-//    }
-//
+    public SelenideAppiumElement getTimeStartVisit() {
+        SelenideAppiumElement targetElement = mainTimeStartVisitCollection.stream()
+                .filter(element -> "09:00".equals(element.getAttribute("content-desc")))
+                .findFirst()
+                .orElse(null);
+        return targetElement;
+    }
+
+    /**
+     * Готовые шаги для применения в тестах
+     */
+
+    @Step("Если список Продажа скрыт, то кликаем для раскрытия")
+    public void openBtnListSales() {
+        while (!textListSales.exists()) {
+            swipe(visitContentForSwipe, "up", 50);
+            if (textListSales.exists()) {
+                break;
+            }
+        }
+        if (!btnAddCommodity.exists()) {
+            slowClick(btnListSales);
+        }
+    }
+
 //    @Step("Переходим в новый визит через кнопку Плюс расписания")
-//    public static void goToNewVisitWithBtnPlus() {
-//        clickOnNewVisitInBtnPlus();
-//        btnToDayDateVisit.should(Condition.visible).click();
-//        btnNowVisit.should(Condition.visible).click();
+//    public void goToNewVisitWithBtnPlus() {
+//        var  clickOnNewVisitInBtnPlus();
+//        btnToDayDateVisit.should(visible).click();
+//        btnNowVisit.should(visible).click();
 //    }
 //
 //    @Step("Добавление клиента в визит")
 //    public static void addClientInVisit(String name) {
 //        if (!bottomsheetSelectClient.exists()) {
-//            btnAddVisitor.should(Condition.visible).click();
+//            btnAddVisitor.should(visible).click();
 //        }
-//        btnSearchClient.should(Condition.visible).click();
-//        searchClientField.should(Condition.visible).sendKeys(name);
+//        btnSearchClient.should(visible).click();
+//        searchClientField.should(visible).sendKeys(name);
 //        androidScrollToAnElementBySecondTextWithClick(name);
 //    }
 //
 //    @Step("Создание клиента через визит")
 //    public static void createClientInVisit() {
 //        if (!bottomsheetSelectClient.exists()) {
-//            btnAddVisitor.should(Condition.visible).click();
+//            btnAddVisitor.should(visible).click();
 //        }
-//        btnPlus.should(Condition.visible).click();
-//        if(arnica){
+//        btnPlus.should(visible).click();
+//        if (arnica) {
 //            androidScrollToAnElementByTextWithClick("Добавить нового клиента");
 //        } else if (sqns) {
 //            androidScrollToAnElementByTextWithClick("Добавить нового пациента");
@@ -193,7 +208,7 @@ public class VisitPage {
 //    @Step("Добавляем в визит товар")
 //    public static void addToVisitCommodity() {
 //        openBtnListSales();
-//        collectionBtnSaleInVisit.get(0).should(Condition.visible).click();
+//        collectionBtnSaleInVisit.get(0).should(visible).click();
 //        androidScrollToAnElementByTextWithClick("Магазин");
 //        androidScrollToAnElementByTextWithClick("Кинетикс");
 //        androidScrollToAnElementByTextWithClick("Кинетикс пробник");
@@ -202,28 +217,28 @@ public class VisitPage {
 //    @Step("Добавляем в визит сертификат")
 //    public static void addToVisitCertificate() {
 //        openBtnListSales();
-//        collectionBtnSaleInVisit.get(1).should(Condition.visible).click();
+//        collectionBtnSaleInVisit.get(1).should(visible).click();
 //        androidScrollToAnElementByTextWithClick("Подарочный сертификат 1000 руб");
 //    }
 //
 //    @Step("Добавляем в визит абонемент")
 //    public static void addToVisitSubscription() {
 //        openBtnListSales();
-//        collectionBtnSaleInVisit.get(2).should(Condition.visible).click();
+//        collectionBtnSaleInVisit.get(2).should(visible).click();
 //        androidScrollToAnElementByTextWithClick("Антицеллюлитный массаж (бедра,ягодицы)");
 //    }
 //
 //    @Step("Меняем статус визита")
 //    public static void changeStatusVisit(String status) {
-//        btnStatusVisit.should(Condition.visible).click();
+//        btnStatusVisit.should(visible).click();
 //        androidScrollToAnElementByTextWithClick(status);
-//        btnSelectStatus.should(Condition.visible).click();
+//        btnSelectStatus.should(visible).click();
 //    }
 //
 //    @Step("Оплачиваем визит и сохраняем")
 //    public static void payVisit() {
-//        btnAddPayment.should(Condition.visible).click();
-//        btnMainCashBox.should(Condition.visible).click();
-//        btnSaveVisit.should(Condition.visible).click();
+//        btnAddPayment.should(visible).click();
+//        btnMainCashBox.should(visible).click();
+//        btnSaveVisit.should(visible).click();
 //    }
 }

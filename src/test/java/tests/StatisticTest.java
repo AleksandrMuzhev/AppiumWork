@@ -6,19 +6,6 @@ import static driver.EmulatorHelper.slowClick;
 import static helper.DateHelper.dateFormat;
 import static helper.DateHelper.monthWithYear;
 import static helper.DateHelper.rangeDateCurrentWeek;
-import static pages.AuthPage.authRegisterDate;
-import static pages.MainMenuPage.closePopUpMain;
-import static pages.StatisticPage.checkTitlePageStatisticViewSuccess;
-import static pages.StatisticPage.clickOnBtnUpdateInStatistic;
-import static pages.StatisticPage.getBtnSwitchCurrentDayStatistic;
-import static pages.StatisticPage.getMainStatisticForSwipe;
-import static pages.StatisticPage.getTextBtnSelectCurrentDay;
-import static pages.StatisticPage.getTextBtnSelectCurrentMonth;
-import static pages.StatisticPage.getTextBtnSelectCurrentWeek;
-import static pages.StatisticPage.nextSwitchDayStatistic;
-import static pages.StatisticPage.prevSwitchDayStatistic;
-import static pages.StatisticPage.switchStaticOnMonth;
-import static pages.StatisticPage.switchStaticOnWeek;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,31 +13,35 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import io.qameta.allure.Description;
+import pages.AuthPage;
+import pages.StatisticPage;
 
 public class StatisticTest extends BaseTest {
+    StatisticPage statisticPage;
 
     @BeforeEach
-    public void setUp() {
-        authRegisterDate();
-        closePopUpMain();
+    void setUp() {
+        var authPage = new AuthPage();
+        var ratePageWidget = authPage.authRegisterDate();
+        var statisticPage = ratePageWidget.closePopUpRateWidget();
     }
 
     @Description("Работа кнопки обновления данных")
     @Test
     public void testWorkBtnUpdateDateStatistic() {
-        clickOnBtnUpdateInStatistic();
-        getMainStatisticForSwipe().exists();
+        statisticPage.clickOnBtnUpdateInStatistic();
+        statisticPage.getMainStatisticForSwipe().exists();
     }
 
     @Description("Переключаем на странице статистике дату на предыдущий день и на следующий день")
     @Test
     public void testSwitchDateStatisticPrevAndNextDay() {
-        prevSwitchDayStatistic();
-        getMainStatisticForSwipe().exists();
+        statisticPage.prevSwitchDayStatistic();
+        statisticPage.getMainStatisticForSwipe().exists();
 
-        slowClick(getBtnSwitchCurrentDayStatistic());
-        nextSwitchDayStatistic();
-        getMainStatisticForSwipe().exists();
+        slowClick(statisticPage.getBtnSwitchCurrentDayStatistic());
+        statisticPage.nextSwitchDayStatistic();
+        statisticPage.getMainStatisticForSwipe().exists();
     }
 
     @Description("Переключаем статистику за день/неделю/месяц")
@@ -60,16 +51,16 @@ public class StatisticTest extends BaseTest {
         String expectedCurrentDateBtnOfWeek = rangeDateCurrentWeek();
         String expectedCurrentDateBtnOfMonth = monthWithYear();
 
-        getTextBtnSelectCurrentDay().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfDay));
-        getMainStatisticForSwipe().exists();
+        statisticPage.getTextBtnSelectCurrentDay().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfDay));
+        statisticPage.getMainStatisticForSwipe().exists();
 
-        switchStaticOnWeek();
-        getTextBtnSelectCurrentWeek().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfWeek));
-        getMainStatisticForSwipe().exists();
+        statisticPage.switchStaticOnWeek();
+        statisticPage.getTextBtnSelectCurrentWeek().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfWeek));
+        statisticPage.getMainStatisticForSwipe().exists();
 
-        switchStaticOnMonth();
-        getTextBtnSelectCurrentMonth().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfMonth));
-        getMainStatisticForSwipe().exists();
+        statisticPage.switchStaticOnMonth();
+        statisticPage.getTextBtnSelectCurrentMonth().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfMonth));
+        statisticPage.getMainStatisticForSwipe().exists();
     }
 
     @Description("Проверяем, что статистика за текущий день отображается верно")
@@ -77,8 +68,8 @@ public class StatisticTest extends BaseTest {
     public void testCheckStatisticCurrentDayViewSuccess() {
         String expectedCurrentDateBtnOfDay = dateFormat(LocalDate.now(), "EEE d MMMM uuuu");
 
-        getTextBtnSelectCurrentDay().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfDay));
-        checkTitlePageStatisticViewSuccess();
+        statisticPage.getTextBtnSelectCurrentDay().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfDay));
+        statisticPage.checkTitlePageStatisticViewSuccess();
     }
 
 }

@@ -2,25 +2,6 @@ package tests;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
-import static driver.EmulatorHelper.elementByXpathText;
-import static driver.EmulatorHelper.slowClick;
-import static pages.AuthPage.authRegisterDate;
-import static pages.MainMenuPage.closePopUpMain;
-import static pages.SchedulePage.clickOnAddEmployeeInBtnPlus;
-import static pages.SchedulePage.clickOnNewVisitInBtnPlus;
-import static pages.SchedulePage.createVisitClickOnFreedomTime;
-import static pages.SchedulePage.getBtnSelectDayNextMonth;
-import static pages.SchedulePage.getBtnSelectDayPrevMonth;
-import static pages.SchedulePage.getBtnSwitchCurrentDaySchedule;
-import static pages.SchedulePage.getMainContentForSwipe;
-import static pages.SchedulePage.getMondayText;
-import static pages.SchedulePage.getTitleSelectEmployeeSchedule;
-import static pages.SchedulePage.nextSwitchCalendar;
-import static pages.SchedulePage.prevSwitchCalendar;
-import static pages.SchedulePage.updateScheduleSwipe;
-import static pages.SchedulePage.viewScheduleByWeek;
-import static pages.VisitPage.getTextTitleCalendarVisit;
-import static pages.VisitPage.getTextTitleNewVisitText;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,13 +11,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import io.qameta.allure.Description;
+import pages.AuthPage;
+import pages.SchedulePage;
+import pages.VisitPage;
 
 public class ScheduleTest extends BaseTest {
+    SchedulePage schedulePage;
+    VisitPage visitPage;
+
     @BeforeEach
     public void setUp() {
-        authRegisterDate();
-        closePopUpMain();
-        slowClick(elementByXpathText("Расписание"));
+        var authPage = new AuthPage();
+        var ratePageWidget = authPage.authRegisterDate();
+        var statisticPage = ratePageWidget.closePopUpRateWidget();
+        var schedulePage = statisticPage.goToSchedule();
     }
 
     @Description("Переключаем на странице расписания дату на месяц назад и на месяц вперед")
@@ -45,44 +33,45 @@ public class ScheduleTest extends BaseTest {
         String expectedPrev = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("EEE d MMMM uuuu", new Locale("ru")));
         String expectedNext = LocalDate.now().plusMonths(1).format(DateTimeFormatter.ofPattern("EEE d MMMM uuuu", new Locale("ru")));
 
-        prevSwitchCalendar();
-        getBtnSelectDayPrevMonth().should(visible).shouldHave(exactText(expectedPrev));
+        schedulePage.prevSwitchCalendar();
+        schedulePage.getBtnSelectDayPrevMonth().should(visible).shouldHave(exactText(expectedPrev));
 
-        getBtnSwitchCurrentDaySchedule().click();
-        nextSwitchCalendar();
-        getBtnSelectDayNextMonth().should(visible).shouldHave(exactText(expectedNext));
+        schedulePage.getBtnSwitchCurrentDaySchedule().click();
+        schedulePage.nextSwitchCalendar();
+        schedulePage.getBtnSelectDayNextMonth().should(visible).shouldHave(exactText(expectedNext));
     }
 
     @Description("Проверяем отображение расписания на неделю и сверяем любой текст дня недели (в данном случае Понедельник)")
     @Test
     public void testViewScheduleByWeek() {
-        viewScheduleByWeek();
+        schedulePage.viewScheduleByWeek();
 
-        getMondayText().should(visible).shouldHave(exactText("Понедельник"));
+        schedulePage.getMondayText().should(visible).shouldHave(exactText("Понедельник"));
     }
 
     @Description("Проверяем работу кнопки создания визита в расписании")
     @Test
     public void testWorkButtonCreateVisit() {
-        clickOnNewVisitInBtnPlus();
+        schedulePage.clickOnNewVisitInBtnPlus();
 
-        getTextTitleCalendarVisit().should(visible).shouldHave(exactText("Дата посещения"));
+        visitPage.getTextTitleCalendarVisit().should(visible).shouldHave(exactText("Дата посещения"));
     }
 
     @Description("Проверяем открытие формы создания визита через нажатие на свободное время")
     @Test
     public void testCreateVisitFormWithClickOnFreedomTime() {
-        createVisitClickOnFreedomTime();
+        String time = "10:00";
+        schedulePage.createVisitClickOnFreedomTime(time);
 
-        getTextTitleNewVisitText().should(visible).shouldHave(exactText("Новый визит"));
+        visitPage.getTextTitleNewVisitText().should(visible).shouldHave(exactText("Новый визит"));
     }
 
     @Description("Проверяем открытие bottomsheet добавления сотрудника через нажатие на свободное время")
     @Test
     public void testAddEmployeeFormWithClickOnFreedomTime() {
-        clickOnAddEmployeeInBtnPlus();
+        schedulePage.clickOnAddEmployeeInBtnPlus();
 
-        getTitleSelectEmployeeSchedule().should(visible).shouldHave(exactText("Выберите сотрудника"));
+        schedulePage.getTitleSelectEmployeeSchedule().should(visible).shouldHave(exactText("Выберите сотрудника"));
     }
 
 //    @Description("Проверяем, что расписание по кабинетам присутстует")
@@ -109,9 +98,9 @@ public class ScheduleTest extends BaseTest {
     @Description("Проверяем обновление расписание свайпом")
     @Test
     public void testUpdateScheduleSwipe() {
-        updateScheduleSwipe();
+        schedulePage.updateScheduleSwipe();
 
-        getMainContentForSwipe().shouldBe(visible);
+        schedulePage.getMainContentForSwipe().shouldBe(visible);
     }
 
 }

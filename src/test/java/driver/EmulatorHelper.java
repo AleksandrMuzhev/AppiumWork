@@ -120,7 +120,7 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      * Имитирует свайп для обновления страницы (например, потянуть вниз).
      * Для использования передаем: xpath-локатор элемента в параметры; направление: right, left, down, up; процент смахивания относительно ширины или высоты
      */
-    public static void swipeToRefresh(SelenideAppiumElement element, String direction, int percent) {
+    public static void swipe(SelenideAppiumElement element, String direction, int percent) {
         String elementId = ((RemoteWebElement) element.getWrappedElement()).getId();
 
         Map<String, Object> params = new HashMap<>();

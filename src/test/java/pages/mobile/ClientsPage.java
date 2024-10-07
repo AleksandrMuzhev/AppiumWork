@@ -1,4 +1,4 @@
-package pages;
+package pages.mobile;
 
 import static com.codeborne.selenide.Condition.not;
 import static com.codeborne.selenide.Condition.visible;
@@ -20,18 +20,27 @@ import org.junit.jupiter.api.Assertions;
 
 import java.time.Duration;
 
+import helper.DataHelper;
 import io.qameta.allure.Step;
 import lombok.Getter;
 
+/**
+ * Страница
+ */
 public class ClientsPage {
 
     /**
      * Основная страница раздела Клиент для Android Арника
      */
+    private final SelenideAppiumElement textTitlePageA = elementByXpathText("Клиенты");
     private final SelenideAppiumElement btnSearchClient = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button");
     private final SelenideAppiumElement searchClientField = elementByXpathText("ФИО посетителя");
     private final SelenideAppiumElement btnCategoryClient = elementByContentDesc("Категория клиентов");
     private final SelenideAppiumElement mainContentClientsForSwipe = elementByClass("//android.widget.ScrollView");
+    /**
+     * Основная страница раздела Пациент для Android SQNS
+     */
+    private final SelenideAppiumElement textTitlePageS = elementByXpathText("Пациенты");
 
     /**
      * Bottomsheet "Выберите категорию" для Android Арника
@@ -46,7 +55,11 @@ public class ClientsPage {
      */
     private final SelenideAppiumElement btnPlus = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.widget.Button");
     private final SelenideAppiumElement btnImportClients = elementByContentDesc("Импортировать из контактов");
-    private final SelenideAppiumElement btnAddNewClient = elementByContentDesc("Добавить нового клиента");
+    private final SelenideAppiumElement btnAddNewClientA = elementByContentDesc("Добавить нового клиента");
+    /**
+     * Элементы кнопки "+" в "Выберите пациента" для Android SQNS
+     */
+    private final SelenideAppiumElement btnAddNewClientS = elementByContentDesc("Добавить нового пациента");
 
     /**
      * Форма создания нового клиента для Android Арника
@@ -54,7 +67,7 @@ public class ClientsPage {
     private final SelenideAppiumElement mainNewClientForSwipe = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[6]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.widget.ScrollView/android.view.ViewGroup/android.widget.ScrollView");
     private final SelenideAppiumElement textTitleClient = elementByXpathText("Клиент");
     private final SelenideAppiumElement textDescriptionClient = elementByXpathText("Новый клиент");
-    private final SelenideAppiumCollection formCreateClientFields = collectionByResourceId("text-input-outlined");
+    private final SelenideAppiumCollection formCreateClientFieldsA = collectionByResourceId("text-input-outlined");
     private final SelenideAppiumElement smsCheckBox = elementByContentDesc("Согласен на получение SMS");
     private final SelenideAppiumElement btnAddCategory = elementByContentDesc("Добавить категорию");
     private final SelenideAppiumElement genderNotSelect = elementByContentDesc("Не выбрано");
@@ -62,6 +75,11 @@ public class ClientsPage {
     private final SelenideAppiumElement genderMan = elementByContentDesc("Мужчина");
     private final SelenideAppiumElement descriptionField = elementByXpath("(//android.widget.EditText[@resource-id=\"text-input-outlined\"])[4]");
     private final SelenideAppiumElement btnCreateClient = elementByContentDesc("Создать");
+    /**
+     * Форма создания нового клиента для Android SQNS
+     */
+    private final SelenideAppiumCollection formCreateClientFieldsS = collectionByResourceId("com.medicalru.app.android:id/TextInput-input");
+
 
     /**
      * Bottomsheet подтверждения разрешения доступа к контактов при переходе в Импортировать контакты для Android Арника
@@ -89,9 +107,9 @@ public class ClientsPage {
      */
     public ClientsPage() {
         if (arnica) {
-            elementByXpathText("Клиенты");
+            textTitlePageA.shouldBe(visible, Duration.ofSeconds(10));
         } else if (sqns) {
-            elementByXpathText("Пациенты");
+            textTitlePageS.shouldBe(visible, Duration.ofSeconds(10));
         }
     }
 
@@ -109,9 +127,18 @@ public class ClientsPage {
 
     public SelenideAppiumElement getBtnAddNewClient() {
         if (arnica) {
-            return btnAddNewClient;
+            return btnAddNewClientA;
         } else if (sqns) {
-            return elementByContentDesc("Добавить нового пациента");
+            return btnAddNewClientS;
+        }
+        return null;
+    }
+
+    public SelenideAppiumCollection getFormCreateClientFields() {
+        if (arnica) {
+            return formCreateClientFieldsA;
+        } else if (sqns) {
+            return formCreateClientFieldsS;
         }
         return null;
     }
@@ -121,36 +148,37 @@ public class ClientsPage {
      */
     @Step("Создание клиента с заполненными валидными полями")
     public ClientsPage createValidClient() {
-        formCreateClientFields.first().should(visible).sendKeys("Дмитрий");
-        formCreateClientFields.get(1).sendKeys("Петров");
-        formCreateClientFields.get(2).sendKeys("Иванович");
-        formCreateClientFields.get(4).sendKeys("9124567895");
+        getFormCreateClientFields().first().should(visible).sendKeys("Дмитрий");
+        getFormCreateClientFields().get(1).sendKeys("Петров");
+        getFormCreateClientFields().get(2).sendKeys("Иванович");
+        getFormCreateClientFields().get(4).sendKeys("9124567895");
         slowClick(smsCheckBox);
-        formCreateClientFields.get(5).sendKeys("test37@mail.ru");
-        formCreateClientFields.get(6).should(visible).sendKeys("10.10.1980");
+        getFormCreateClientFields().get(5).sendKeys("test37@mail.ru");
+        getFormCreateClientFields().get(6).should(visible).sendKeys("10.10.1980");
         elementByXpathText("Мужчина");
         descriptionField.sendKeys("Здоровая личность");
         btnCreateClient.should(visible).click();
-        return new ClientsPage();
+        return this;
     }
 
     @Step("Создание клиента c номером телефона")
-    public ClientsPage createClientWithPhone(String name, String surname, String patronymic, String phone) {
+    public ClientsPage createClientWithPhone(String numberCard, String name, String surname, String patronymic, String phone) {
         getBtnPlus().should(visible, Duration.ofSeconds(5)).click();
         getBtnAddNewClient().should(visible).click();
-        formCreateClientFields.first().sendKeys(name);
-        formCreateClientFields.get(1).sendKeys(surname);
-        formCreateClientFields.get(2).sendKeys(patronymic);
-        formCreateClientFields.get(3).sendKeys(phone);
+        getFormCreateClientFields().first().sendKeys(numberCard);
+        getFormCreateClientFields().get(1).sendKeys(name);
+        getFormCreateClientFields().get(2).sendKeys(surname);
+        getFormCreateClientFields().get(3).sendKeys(patronymic);
+        getFormCreateClientFields().get(5).sendKeys(phone);
         btnCreateClient.click();
-        return new ClientsPage();
+        return this;
     }
 
     @Step("Фильтрация клиента в справочнике через поиск")
     public ClientsPage filterClientInfo(String name) {
         btnSearchClient.should(visible).click();
         searchClientField.should(visible).sendKeys(name);
-        return new ClientsPage();
+        return this;
     }
 
     @Step("Проверяем 1-й найденный результат на сооветствие поиска в фильтре")
@@ -158,11 +186,9 @@ public class ClientsPage {
         SelenideElement actualName = elementByXpath("(//android.widget.TextView[@text=\"" + name + "\"])[2]");
         SelenideElement actualPhone = elementByXpath("(//android.widget.TextView[@text=\"" + phone + "\"])[2]");
 
-        System.out.println(actualName);
-        System.out.println(actualPhone);
-        Assertions.assertEquals(name, actualName.should(visible).getText());
-        Assertions.assertEquals(phone, actualPhone.should(visible).getText());
-        return new ClientsPage();
+        Assertions.assertEquals(name, actualName.should(visible, Duration.ofSeconds(5)).getText());
+        Assertions.assertEquals(phone, actualPhone.should(visible, Duration.ofSeconds(5)).getText());
+        return this;
     }
 
     @Step("Импорт контактов из справочника клиентов")
@@ -177,7 +203,7 @@ public class ClientsPage {
         elementByXpathText("В вашем телефоне нет контактов").shouldBe(not(visible), Duration.ofSeconds(5));
         searchImportField.sendKeys(name.getText());
         name.click();
-        btnImport.should(visible).click();
-        return new ClientsPage();
+        btnImport.should(visible, Duration.ofSeconds(5)).click();
+        return this;
     }
 }

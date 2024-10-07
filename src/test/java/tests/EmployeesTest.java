@@ -1,22 +1,18 @@
-package tests;
-
-import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.appium.SelenideAppium.$;
-import static config.ConfigReader.arnica;
-import static config.ConfigReader.sqns;
-import static driver.WebDriverHelper.setWebDriver;
-import static helper.Constants.getLOGIN;
-import static helper.Constants.getPASSWORD;
-import static helper.Constants.getUSER;
-import static helper.Constants.getUrlWeb;
-
-import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-
-import io.qameta.allure.Description;
-
-public class EmployeesTest {
-    //
+//package tests;
+//
+//import static com.codeborne.selenide.Selenide.open;
+//import static com.codeborne.selenide.appium.SelenideAppium.$;
+//
+//import static driver.EmulatorHelper.elementByXpathText;
+//import static driver.WebDriverHelper.setWebDriver;
+//
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Test;
+//
+//import io.qameta.allure.Description;
+//
+//public class EmployeesTest {
+//
 //    @BeforeEach
 //    public void setUp() {
 //        authRegisterDate();
@@ -43,4 +39,4 @@ public class EmployeesTest {
 //        }
 //        Thread.sleep(3000);
 //    }
-}
+//}

@@ -1,4 +1,4 @@
-package pages;
+package pages.mobile;
 
 import static com.codeborne.selenide.Condition.visible;
 import static config.ConfigReader.arnica;
@@ -13,6 +13,9 @@ import java.time.Duration;
 
 import io.qameta.allure.Step;
 
+/**
+ * Виджет оценки приложения после успешной авторизации (появляется раз в 120 дней)
+ */
 public class RatePageWidget {
 
     private final SelenideAppiumElement adPopUpRate = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]");
@@ -28,7 +31,9 @@ public class RatePageWidget {
                 goBack();
             }
         } else if (sqns) {
-            btnRemember.should(visible, Duration.ofSeconds(20)).click();
+            if (btnRemember.exists()){
+                btnRemember.should(visible, Duration.ofSeconds(20)).click();
+            }
         }
         return new StatisticPage();
     }

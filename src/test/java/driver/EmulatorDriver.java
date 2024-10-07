@@ -30,20 +30,20 @@ public class EmulatorDriver implements WebDriverProvider { //Имплемент�
     protected static AppiumDriver driver;
 
     //чтение пропертей
-    private static final String DEVICE_NAME = ConfigReader.emulatorConfig.deviceName();
-    private static final String PLATFORM_NAME = ConfigReader.emulatorConfig.platformName();
-    private static String APP_PACKAGE = ConfigReader.emulatorConfig.appPackage();
-    private static String APP_ACTIVITY = ConfigReader.emulatorConfig.appActivity();
-    private static final String APP = ConfigReader.emulatorConfig.app();
-    private static final String URL = ConfigReader.emulatorConfig.remoteURL();
-    private static final String AUTOMATION_NAME = ConfigReader.emulatorConfig.automationName();
+    private final String DEVICE_NAME = ConfigReader.emulatorConfig.deviceName();
+    private final String PLATFORM_NAME = ConfigReader.emulatorConfig.platformName();
+    private String APP_PACKAGE = ConfigReader.emulatorConfig.appPackage();
+    private String APP_ACTIVITY = ConfigReader.emulatorConfig.appActivity();
+    private final String APP = ConfigReader.emulatorConfig.app();
+    private final String URL = ConfigReader.emulatorConfig.remoteURL();
+    private final String AUTOMATION_NAME = ConfigReader.emulatorConfig.automationName();
 
     /**
      * Валидация URL ссылки из пропертей
      *
      * @return
      */
-    public static URL getUrl() { //Метод для проверки корректно указанной ссылки для подключения к Appium
+    private URL getUrl() { //Метод для проверки корректно указанной ссылки для подключения к Appium
         try {
             return new URL(URL);
         } catch (MalformedURLException e) {

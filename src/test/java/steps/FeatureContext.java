@@ -2,25 +2,18 @@ package steps;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.appium.AppiumSelectors.byText;
 import static com.codeborne.selenide.appium.AppiumSelectors.withText;
 import static com.codeborne.selenide.appium.SelenideAppium.$;
-import static config.ConfigReader.arnica;
-import static config.ConfigReader.sqns;
 import static driver.EmulatorHelper.elementByXpathText;
-import static driver.EmulatorHelper.sendKeysAndFind;
 import static driver.EmulatorHelper.slowClick;
-import static driver.WebDriverHelper.setWebDriver;
-import static helper.Constants.LOGIN_WEB;
-import static helper.Constants.PASSWORD_WEB;
-import static helper.Constants.getUSER;
-import static helper.Constants.getUrlWeb;
+import static helper.DateHelper.dateFormat;
+import static helper.DateHelper.monthWithYear;
+import static helper.DateHelper.rangeDateCurrentWeek;
+import static helper.DeviceHelper.executeBash;
+import static helper.RunHelper.runHelper;
 
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
-import com.codeborne.selenide.appium.SelenideAppiumElement;
-
-import org.openqa.selenium.By;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -28,31 +21,73 @@ import java.util.Locale;
 
 import driver.EmulatorDriver;
 import driver.EmulatorHelper;
+import driver.WebDriverHelper;
+import helper.DataHelper;
 import io.appium.java_client.AppiumDriver;
 import io.cucumber.java.After;
-import io.cucumber.java.ru.Дано;
+import io.cucumber.java.Before;
 import io.cucumber.java.ru.Допустим;
 import io.cucumber.java.ru.Затем;
 import io.cucumber.java.ru.И;
 import io.cucumber.java.ru.Пусть;
 import io.cucumber.java.ru.Тогда;
-import pages.AuthPage;
-import pages.ClientsPage;
-import pages.RatePageWidget;
-import pages.SchedulePage;
-import pages.SelectEmployeePage;
-import pages.StatisticPage;
-import pages.VisitPage;
-import tests.BaseTest;
+import pages.mobile.AuthPage;
+import pages.mobile.ClientsPage;
+import pages.mobile.DateVisit;
+import pages.mobile.RatePageWidget;
+import pages.mobile.SchedulePage;
+import pages.mobile.SelectEmployeePage;
+import pages.mobile.StatisticPage;
+import pages.mobile.TimeStart;
+import pages.mobile.VisitPage;
+import pages.web.ClientInfoWeb;
+import pages.web.LoginPageWeb;
+import pages.web.RootPageWeb;
+import pages.web.SchedulePageWeb;
 
-public class FeatureContext extends BaseTest {
-    private static AuthPage authPage = new AuthPage();
-    private static RatePageWidget ratePageWidget;
-    private static StatisticPage statisticPage;
-    private static ClientsPage clientsPage;
-    private static SchedulePage schedulePage;
-    private static VisitPage visitPage;
-    private static SelectEmployeePage selectEmployeePage;
+public class FeatureContext extends EmulatorDriver {
+    private static boolean isSetupDone = false;
+    Long numberCard = DataHelper.getUserInfo().getNumberCard();
+    String name = DataHelper.getUserInfo().getName();
+    String surname = DataHelper.getUserInfo().getSurname();
+    String patronymic = DataHelper.getUserInfo().getPatronymic();
+    String phone = DataHelper.getUserInfo().getPhone();
+
+    private AuthPage authPage = new AuthPage();
+    private ClientsPage clientsPage;
+    private DateVisit dateVisit;
+    private RatePageWidget ratePageWidget;
+    private SchedulePage schedulePage;
+    private SelectEmployeePage selectEmployeePage;
+    private StatisticPage statisticPage;
+    private TimeStart timeStart;
+    private VisitPage visitPage;
+    private ClientInfoWeb clientInfoWeb;
+    private LoginPageWeb loginPageWeb;
+    private RootPageWeb rootPageWeb;
+    private SchedulePageWeb schedulePageWeb;
+
+    /**
+     * Отключение анимаций на эмуляторе чтобы не лагало
+     */
+    private static void disableAnimationOnEmulator() { //С помощью работы данного метода и указанных команд происходит ускорение работы эмулятора
+        executeBash("adb -s shell settings put global transition_animation_scale 0.0"); //Отключаем анимацию
+        executeBash("adb -s shell settings put global window_animation_scale 0.0"); //Отключаем анимацию при переключении в окнах
+        executeBash("adb -s shell settings put global animator_duration_scale 0.0"); //Отключаем длительность этой анимации
+    }
+
+    @Before
+    public static void setup() {
+        if (!isSetupDone) {
+//            Инициализация AndroidDriver, напрямую нигде не взаимодействуем. runHelper возвращает конструктор по-умолчанию и вызывает getDriverClass и получаем название device
+            Configuration.browser = runHelper().getDriverClass().getName();
+//        Configuration.startMaximized = false; //Эмулятор не будет стартовать на весь экран
+            Configuration.browserSize = null; //Не указываем размер, так как зависеть будет от устройства
+            Configuration.timeout = 10000; //Ограничение по времени для взаимодействия с элементом
+            disableAnimationOnEmulator(); //Вызываем метод в связи с тем, что ПК при запуске эмулятора может подвиснуть. При отключении настроек анимации проблема решается
+            isSetupDone = true;
+        }
+    }
 
     @Допустим("открываю приложение")
     public void setUp() {
@@ -66,11 +101,18 @@ public class FeatureContext extends BaseTest {
     @After
     public void tearDown() {
         driver.quit();
+        driver = null;
+        isSetupDone = false;
     }
 
     @Допустим("открываю браузер")
     public void switchBrowser() {
-        setWebDriver();
+        loginPageWeb = WebDriverHelper.setWebDriver();
+    }
+
+    @Затем("закрываю браузер")
+    public void closeBrowser() {
+        WebDriverHelper.tearDownWeb();
     }
 
     @И("возвращаюсь назад")
@@ -87,20 +129,44 @@ public class FeatureContext extends BaseTest {
     public void iClick(String text, String pageName) {
         slowClick(elementByXpathText(text));
         switch (pageName) {
+            case "AuthPage":
+                authPage = new AuthPage();
+                break;
+            case "ClientsPage":
+                clientsPage = new ClientsPage();
+                break;
+            case "DateVisit":
+                dateVisit = new DateVisit();
+                break;
             case "RatePageWidget":
                 ratePageWidget = new RatePageWidget();
                 break;
             case "SchedulePage":
                 schedulePage = new SchedulePage();
                 break;
+            case "SelectEmployeePage":
+                selectEmployeePage = new SelectEmployeePage();
+                break;
             case "StatisticPage":
                 statisticPage = new StatisticPage();
                 break;
-            case "ClientsPage":
-                clientsPage = new ClientsPage();
+            case "TimeStart":
+                timeStart = new TimeStart();
                 break;
-            case "AuthPage":
-                authPage = new AuthPage();
+            case "VisitPage":
+                visitPage = new VisitPage();
+                break;
+            case "ClientInfoWeb":
+                clientInfoWeb = new ClientInfoWeb();
+                break;
+            case "LoginPageWeb":
+                loginPageWeb = new LoginPageWeb();
+                break;
+            case "RootPageWeb":
+                rootPageWeb = new RootPageWeb();
+                break;
+            case "SchedulePageWeb":
+                schedulePageWeb = new SchedulePageWeb();
                 break;
             // Добавьте другие страницы по мере необходимости
             default:
@@ -112,20 +178,44 @@ public class FeatureContext extends BaseTest {
     public void iClickNotAllText(String text, String pageName) {
         $(withText(text)).click();
         switch (pageName) {
+            case "AuthPage":
+                authPage = new AuthPage();
+                break;
+            case "ClientsPage":
+                clientsPage = new ClientsPage();
+                break;
+            case "DateVisit":
+                dateVisit = new DateVisit();
+                break;
             case "RatePageWidget":
                 ratePageWidget = new RatePageWidget();
                 break;
             case "SchedulePage":
                 schedulePage = new SchedulePage();
                 break;
+            case "SelectEmployeePage":
+                selectEmployeePage = new SelectEmployeePage();
+                break;
             case "StatisticPage":
                 statisticPage = new StatisticPage();
                 break;
-            case "ClientsPage":
-                clientsPage = new ClientsPage();
+            case "TimeStart":
+                timeStart = new TimeStart();
                 break;
-            case "AuthPage":
-                authPage = new AuthPage();
+            case "VisitPage":
+                visitPage = new VisitPage();
+                break;
+            case "ClientInfoWeb":
+                clientInfoWeb = new ClientInfoWeb();
+                break;
+            case "LoginPageWeb":
+                loginPageWeb = new LoginPageWeb();
+                break;
+            case "RootPageWeb":
+                rootPageWeb = new RootPageWeb();
+                break;
+            case "SchedulePageWeb":
+                schedulePageWeb = new SchedulePageWeb();
                 break;
             // Добавьте другие страницы по мере необходимости
             default:
@@ -146,40 +236,77 @@ public class FeatureContext extends BaseTest {
     }
 
     @И("пользователь авторизуется с зарегистрированным данными")
-    public void sendKeysToElement() {
+    public void userAuthWithRegisterData() {
         ratePageWidget = authPage.authRegisterDate();
     }
 
-    @И("перехожу в справочник клиентов")
-    public void goToInfoClients() {
-        open(getUrlWeb());
-        $(By.id("RootLoginForm_login")).sendKeys(LOGIN_WEB);
-        $(By.id("RootLoginForm_password")).sendKeys(PASSWORD_WEB);
-        $(By.cssSelector("input[type=submit]")).click();
-        $(By.cssSelector("input[title=\"Что-нибудь - название, имя, емэйл\"]")).sendKeys(getUSER());
-        $(By.cssSelector("div.field.search-submit-button > button")).click();
-        $(By.linkText(getUSER())).click();
-        $(By.linkText("Продажи")).click();
-        if (arnica) {
-            $(By.linkText("Клиенты")).click();
-        } else if (sqns) {
-            $(By.linkText("Пациенты")).click();
-        }
+//    @И("перехожу в справочник клиентов в браузере")
+//    public void goToInfoClients() {
+//        var urlWeb = DataHelper.getUrlInfo();
+//        var authInfoWeb = DataHelper.getUserInfoWeb();
+//        open(urlWeb.getUrl());
+//        $(By.id("RootLoginForm_login")).sendKeys(LOGIN_WEB);
+//        $(By.id("RootLoginForm_password")).sendKeys(PASSWORD_WEB);
+//        $(By.cssSelector("input[type=submit]")).click();
+//        $(By.cssSelector("input[title=\"Что-нибудь - название, имя, емэйл\"]")).sendKeys(authInfoWeb.getUser());
+//        $(By.cssSelector("div.field.search-submit-button > button")).click();
+//        $(By.linkText(authInfoWeb.getUser())).click();
+//        $(By.linkText("Продажи")).click();
+//        if (arnica) {
+//            $(By.linkText("Клиенты")).click();
+//        } else if (sqns) {
+//            $(By.linkText("Пациенты")).click();
+//        }
+//    }
+
+    @И("создаю клиента {string} {string} {string} {string} c номером телефона {string}")
+    public void clientNewWithPhone(String numberCard, String name, String surname, String
+            patronimyc, String phone) {
+        clientsPage.createClientWithPhone(numberCard, name, surname, patronimyc, phone);
     }
 
-    @И("создаю клиента {string} {string} {string} c номером телефона {string}")
-    public void clientWithPhone(String name, String surname, String patronimyc, String phone) {
-        clientsPage = clientsPage.createClientWithPhone(name, surname, patronimyc, phone);
+    @И("создаю клиента с случайными данными")
+    public void clientNewRandomData() {
+        clientNewWithPhone("" + numberCard, name, surname, patronymic, phone);
+    }
+
+    @Тогда("вижу клиента {string} с номером телефона {string} в результате фильтра")
+    public void checkResultFilterClient(String name, String phone) {
+        clientsPage.checkResultClientSearch(name, phone);
+    }
+
+    @Тогда("вижу добавленного клиента с случайными данными в результате фильтра")
+    public void checkClientRandomInInfo() {
+        String formattedPhone = DataHelper.generateFormattedPhone(phone);
+        String fullname = surname + " " + name + " " + patronymic + " ";
+        clientsPage.checkResultClientSearch(fullname, formattedPhone);
+    }
+
+    @Тогда("вижу добавленного клиента {string} с номером телефона {string} в справочнике браузера")
+    public void checkClientInInfo(String name, String phone) {
+        clientInfoWeb.checkClientVisible(name, phone);
+    }
+
+    @Тогда("вижу добавленного клиента с случайными данными в справочнике браузера")
+    public void checkClientAddRandomInfo() {
+        String formattedPhone = DataHelper.generateFormattedPhone(phone);
+        String fullname = surname + " " + name + " " + patronymic;
+        clientInfoWeb.checkClientVisible(fullname, formattedPhone);
     }
 
     @И("фильтрую клиента {string}")
     public void filterClient(String name) {
-        clientsPage = clientsPage.filterClientInfo(name);
+        clientsPage.filterClientInfo(name);
     }
 
     @И("импортирую контакт из справочника клиентов")
     public void checkResultFilterClientInfo() {
         clientsPage = clientsPage.importContact();
+    }
+
+    @Тогда("вижу страницу результатов импорта")
+    public void checkResultImportPage() {
+        clientsPage.getTextTitleResultImport().shouldHave(exactText("Результаты"));
     }
 
     @И("закрываю всплывающее окно")
@@ -226,12 +353,12 @@ public class FeatureContext extends BaseTest {
 
     @И("кликаю на создание визита через кнопку плюс в расписании")
     public void clickOnCreateVisitWithBtnPlusInSchedule() {
-        schedulePage = schedulePage.clickOnNewVisitInBtnPlus();
+        dateVisit = schedulePage.clickOnNewVisitInBtnPlus();
     }
 
     @Тогда("вижу календарь посещения перед созданием визита")
     public void checkCalendarVisitBeforeCreateVisit() {
-        visitPage.getTextTitleCalendarVisit().should(visible).shouldHave(exactText("Дата посещения"));
+        dateVisit.getTextTitleCalendarVisit().shouldHave(exactText("Дата посещения"));
     }
 
     @И("перехожу на страницу расписание")
@@ -258,6 +385,100 @@ public class FeatureContext extends BaseTest {
     public void goToAddEmployeeWithSchedule() {
         selectEmployeePage = schedulePage.clickOnAddEmployeeInBtnPlus();
     }
+
+    @И("обновляю страницу расписания")
+    public void updateSchedule() {
+        schedulePage.updateScheduleSwipe();
+    }
+
+    @Тогда("вижу страницу расписания")
+    public void checkSchedule() {
+        schedulePage.getTextTitleSchedule().shouldBe(visible);
+        schedulePage.getBtnPlus().shouldBe(visible);
+    }
+
+    @И("обновляю страницу статистики")
+    public void updateStatistic() {
+        statisticPage.clickOnBtnUpdateInStatistic();
+    }
+
+    @Тогда("страница статистики отображается без ошибок")
+    public void checkStatistic() {
+        statisticPage.getTitleStatistic().shouldBe(visible);
+        statisticPage.getTitleVisitsStatistic().shouldBe(visible);
+    }
+
+    @И("переключаю страницу статистики на предыдущий день")
+    public void switchStatisticPrevDay() {
+        statisticPage.prevSwitchDayStatistic();
+    }
+
+    @И("переключаю страницу статистики на следующий день")
+    public void switchStatisticNextDay() {
+        statisticPage.nextSwitchDayStatistic();
+    }
+
+    @И("переключаю страницу статистики на текущий день")
+    public void switchStatisticCurrentDay() {
+        statisticPage.getBtnSwitchCurrentDayStatistic().click();
+    }
+
+    @И("переключаю страницу статистики по неделям")
+    public void switchStatisticOnWeek() {
+        String expectedCurrentDateBtnOfWeek = rangeDateCurrentWeek();
+
+        statisticPage.switchStaticOnWeek();
+        statisticPage.getTextBtnSelectCurrentWeek().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfWeek));
+        statisticPage.getMainStatisticForSwipe().exists();
+    }
+
+    @И("переключаю страницу статистики по месяцам")
+    public void switchStatisticOnMonth() {
+        String expectedCurrentDateBtnOfMonth = monthWithYear();
+
+        statisticPage.switchStaticOnMonth();
+        statisticPage.getTextBtnSelectCurrentMonth().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfMonth));
+        statisticPage.getMainStatisticForSwipe().exists();
+    }
+
+    @И("статистика за текущий день отображается верно")
+    public void checkStatisticOnCurrentDaySuccess() {
+        String expectedCurrentDateBtnOfDay = dateFormat(LocalDate.now(), "EEE d MMMM uuuu");
+
+        statisticPage.getTextBtnSelectCurrentDay().should(visible).shouldHave(exactText(expectedCurrentDateBtnOfDay));
+        statisticPage.checkTitlePageStatisticViewSuccess();
+    }
+
+    @И("создаю клиента с заполненными валидными полями")
+    public void createClientWithInputValidField() {
+        clientsPage.createValidClient();
+    }
+
+    @И("заполняю поле {string}: {string}")
+    public void sendKeysField(String field, String text) {
+        EmulatorHelper.elementByXpathText(field).sendKeys(text);
+    }
+
+    @И("заполняю поле {string} случайным ФИО")
+    public void sendKeysRandomField(String text) {
+        sendKeysField(text, surname + " " + name);
+    }
+
+    @Допустим("логинюсь в браузере")
+    public void loginInBrowser() {
+        rootPageWeb = loginPageWeb.validLogin();
+    }
+
+    @И("ищу пользователя в админке по email {string} и перехожу в акаунт {string}")
+    public void searchEmployeeInRoot(String email, String nameEmployee) {
+        schedulePageWeb = rootPageWeb.goToEmployee(email, nameEmployee);
+    }
+
+    @И("перехожу в справочник клиентов браузера")
+    public void goToClients() {
+        clientInfoWeb = schedulePageWeb.goToClientInfo();
+    }
+
 
 //    @Дано("^заполняю \"([^\"]*)\": \"([^\"]*)\" в строке \"([^\"]*)\"$")
 //    @Дано("^заполняю '([^']*)': \"([^\"]*)\" в строке \"([^\"]*)\"$")

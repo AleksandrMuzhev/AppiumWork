@@ -16,7 +16,7 @@ public class ApkInfoHelper {
     /**
      * AndroidManifest.xml файл в виде строки из apk файла
      */
-    private String apkInfo;
+    private final String apkInfo;
 
     /**
      * Конструктор в котором происходит чтение apk файла из ресурсов и инициализируется переменная apkInfo

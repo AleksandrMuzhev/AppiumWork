@@ -78,4 +78,7 @@ task runCucumberTests(type: Test) {
     // Установка кодировки
     systemProperty 'file.encoding', 'UTF-8'
     outputs.upToDateWhen { false } // для того, чтобы изменения применялись каждый раз
+
+    // Исключить тесты из test/java
+    exclude 'src/test/java/**'
 }

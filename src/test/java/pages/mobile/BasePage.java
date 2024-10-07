@@ -1,4 +1,4 @@
-package pages;
+package pages.mobile;
 
 import static com.codeborne.selenide.appium.SelenideAppium.$;
 

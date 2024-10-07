@@ -1,4 +1,4 @@
-package pages;
+package pages.mobile;
 
 import static com.codeborne.selenide.Condition.visible;
 import static config.ConfigReader.arnica;
@@ -13,17 +13,19 @@ import static driver.EmulatorHelper.elementByXpath;
 import static driver.EmulatorHelper.elementByXpathText;
 import static driver.EmulatorHelper.sendKeysAndFind;
 import static driver.EmulatorHelper.slowClick;
-import static helper.Constants.getLOGIN;
-import static helper.Constants.getPASSWORD;
 
 import com.codeborne.selenide.appium.SelenideAppiumCollection;
 import com.codeborne.selenide.appium.SelenideAppiumElement;
 
 import java.time.Duration;
 
+import helper.DataHelper;
 import io.qameta.allure.Step;
 import lombok.Getter;
 
+/**
+ * Страница авторизации
+ */
 public class AuthPage {
 
     /**
@@ -83,15 +85,17 @@ public class AuthPage {
      */
     @Step("Авторизация пользователя с зарегистрированным данными Логин и Пароль")
     public RatePageWidget authRegisterDate() {
+        var loginType = DataHelper.getAuthInfoMobile().getLogin();
+        var passwordType = DataHelper.getAuthInfoMobile().getPassword();
         if (platformAndroid) {
-            btnLogin.should(visible);
+            btnLogin.should(visible, Duration.ofSeconds(5));
             slowClick(btnLogin);
             if (arnica) {
-                sendKeysAndFind(authFieldsA.first(), getLOGIN());
-                sendKeysAndFind(authFieldsA.last(), getPASSWORD());
+                sendKeysAndFind(authFieldsA.first(), loginType);
+                sendKeysAndFind(authFieldsA.last(), passwordType);
             } else if (sqns) {
-                sendKeysAndFind(authFieldsS.first(), getLOGIN());
-                sendKeysAndFind(authFieldsS.last(), getPASSWORD());
+                sendKeysAndFind(authFieldsS.first(), loginType);
+                sendKeysAndFind(authFieldsS.last(), passwordType);
             }
             btnLogin.click();
         } else if (platformIOS) {

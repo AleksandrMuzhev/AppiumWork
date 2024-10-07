@@ -27,6 +27,11 @@ import io.appium.java_client.ios.IOSDriver;
  * Класс помощник для Page страниц
  */
 public class EmulatorHelper extends EmulatorDriver { //Наследуемся от класса EmulatorDriver, поэтому есть доступ к переменной driver
+
+    //Приватный конструктор, который предотвращает создание экземпляров.
+    private EmulatorHelper() {
+    }
+
     /**
      * Нажимает кнопку назад
      */

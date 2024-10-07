@@ -10,11 +10,15 @@ import java.util.Locale;
  */
 
 public class DateHelper {
+
     /**
      * Массив месяцев года для использования генерации дат в локаторах
      */
     public static String[] MONTH_NAMES = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
 
+    //Приватный конструктор, который предотвращает создание экземпляров.
+    private DateHelper() {
+    }
 
     /**
      * Универсальный метод для отображения текущей даты с указанием формата (Например, "EEE d MMMM uuuu" - требуется выбрать, что используем)
@@ -22,7 +26,6 @@ public class DateHelper {
     public static String dateFormat(LocalDate currentDate, String pattern) {
         return currentDate.format(DateTimeFormatter.ofPattern(pattern, new Locale("ru")));
     }
-
 
     /**
      * Методы для генерации сокращенных названий дней недели в формате EEE (Например, Пн)

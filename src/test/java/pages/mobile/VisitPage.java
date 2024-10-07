@@ -1,7 +1,8 @@
-package pages;
+package pages.mobile;
 
 import static com.codeborne.selenide.Condition.visible;
 import static config.ConfigReader.arnica;
+import static config.ConfigReader.sqns;
 import static driver.EmulatorHelper.collectionByResourceId;
 import static driver.EmulatorHelper.collectionByXpath;
 import static driver.EmulatorHelper.elementByClass;
@@ -11,42 +12,19 @@ import static driver.EmulatorHelper.elementByXpath;
 import static driver.EmulatorHelper.elementByXpathText;
 import static driver.EmulatorHelper.slowClick;
 import static driver.EmulatorHelper.swipe;
-import static helper.DateHelper.dayOfMonth;
-import static helper.DateHelper.yearWithMonthValue;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.appium.SelenideAppiumCollection;
 import com.codeborne.selenide.appium.SelenideAppiumElement;
+
+import java.time.Duration;
 
 import io.qameta.allure.Step;
 import lombok.Getter;
 
-
+/**
+ * Страница визита
+ */
 public class VisitPage {
-    SchedulePage schedulePage;
-
-    /**
-     * Элементы календаря перед созданием Визита для Android Арника
-     */
-    private final SelenideAppiumElement btnBackDateVisit = elementByContentDesc("назад");
-    @Getter
-    private final SelenideAppiumElement textTitleCalendarVisit = elementByXpathText("Дата посещения");
-    private final SelenideAppiumElement textSelectDateVisit = elementByXpathText("Выберите дату\"]");
-    private final SelenideAppiumElement btnToDayDateVisit = elementByContentDesc("сегодня");
-    private final SelenideAppiumCollection dayNamesSchedule = collectionByXpath("//android.view.ViewGroup[@resource-id=\"undefined.item_\"" + yearWithMonthValue() + "\".header.dayNames\"]");
-    private final SelenideAppiumElement numberDayCalendar = elementByXpath("(//android.widget.TextView[@text=\"" + dayOfMonth() + "\"])[1]");
-
-    /**
-     * Элементы Время начала перед созданием Визита для Android Арника
-     */
-    private final SelenideAppiumElement textTitleTimeStartVisit = elementByXpathText("Время начала");
-    private final SelenideAppiumElement textSelectTimeStartVisit = elementByXpathText("Выберите или укажите");
-    private final SelenideAppiumElement btnNowVisit = elementByContentDesc("сейчас");
-    private final SelenideAppiumElement textNameEmployee = elementByXpathText("Стефанив Ольга Валерьевна");
-    private final SelenideAppiumElement textPositionEmployee = elementByXpathText("Мастер маникюра / педикюра / подолог\"]");
-    private final SelenideAppiumElement textDescriptionTimeFromTo = elementByXpathText("Время с 09:00 по 19:00");
-    private final SelenideAppiumCollection mainTimeStartVisitCollection = collectionByXpath("//android.widget.ScrollView/android.view.ViewGroup");
-    private final SelenideAppiumElement btnSetTimeManual = elementByContentDesc("Задать вручную");
 
     /**
      * Основная страница раздела Визит для Android (Все продукты)
@@ -124,6 +102,9 @@ public class VisitPage {
     public VisitPage() {
         if (arnica) {
             btnBack.click();
+            textTitleNewVisitText.shouldBe(visible, Duration.ofSeconds(5));
+        } else if (sqns) {
+            textTitleNewVisitText.shouldBe(visible, Duration.ofSeconds(5));
         }
     }
 
@@ -138,13 +119,13 @@ public class VisitPage {
         return elementByXpath("//android.view.ViewGroup[@content-desc=\"" + nameService + "\"]");
     }
 
-    public SelenideAppiumElement getTimeStartVisit() {
-        SelenideAppiumElement targetElement = mainTimeStartVisitCollection.stream()
-                .filter(element -> "09:00".equals(element.getAttribute("content-desc")))
-                .findFirst()
-                .orElse(null);
-        return targetElement;
-    }
+//    public SelenideAppiumElement getTimeStartVisit() {
+//        SelenideAppiumElement targetElement = mainTimeStartVisitCollection.stream()
+//                .filter(element -> "09:00".equals(element.getAttribute("content-desc")))
+//                .findFirst()
+//                .orElse(null);
+//        return targetElement;
+//    }
 
     /**
      * Готовые шаги для применения в тестах
@@ -170,15 +151,15 @@ public class VisitPage {
 //        btnNowVisit.should(visible).click();
 //    }
 //
-//    @Step("Добавление клиента в визит")
-//    public static void addClientInVisit(String name) {
-//        if (!bottomsheetSelectClient.exists()) {
-//            btnAddVisitor.should(visible).click();
-//        }
-//        btnSearchClient.should(visible).click();
-//        searchClientField.should(visible).sendKeys(name);
+    @Step("Добавление клиента в визит")
+    public void addClientInVisit(String name) {
+        if (!bottomsheetSelectClient.exists()) {
+            btnAddVisitor.should(visible).click();
+        }
+        btnSearchClient.should(visible).click();
+        searchClientField.should(visible).sendKeys(name);
 //        androidScrollToAnElementBySecondTextWithClick(name);
-//    }
+    }
 //
 //    @Step("Создание клиента через визит")
 //    public static void createClientInVisit() {

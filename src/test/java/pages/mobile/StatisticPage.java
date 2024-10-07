@@ -1,4 +1,4 @@
-package pages;
+package pages.mobile;
 
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
@@ -21,6 +21,7 @@ import static helper.DateHelper.rangeDateCurrentWeek;
 import com.codeborne.selenide.appium.SelenideAppiumCollection;
 import com.codeborne.selenide.appium.SelenideAppiumElement;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
@@ -28,18 +29,23 @@ import java.util.Locale;
 import io.qameta.allure.Step;
 import lombok.Getter;
 
+/**
+ * Страница статистистики
+ */
 public class StatisticPage {
 
     /**
      * Основная страница раздела Статистика для Android (Все продукты)
      */
+    private final SelenideAppiumElement schedule = elementByXpathText("Расписание");
     private final SelenideAppiumCollection appBarStatistic = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]");
     @Getter
     private final SelenideAppiumElement titleStatistic = elementByXpathText("Статистика");
     private final SelenideAppiumElement btnSalonsStatistic = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[2]");
     private final SelenideAppiumCollection collectionBtnDaysStatisticForSwipe = collectionByClass("android.widget.HorizontalScrollView"); //Кнопки с датами в коллекции определяются через метод .first()
     private final SelenideAppiumElement titleFinancesStatistic = elementByXpathText("Финансы");
-    private final SelenideAppiumElement titleVisitsStatistc = elementByXpathText("Визиты");
+    @Getter
+    private final SelenideAppiumElement titleVisitsStatistic = elementByXpathText("Визиты");
     private final SelenideAppiumElement titleCashboxStatistic = elementByXpathText("Кассы");
     private final SelenideAppiumElement titleSalaryEmployees = elementByXpathText("Зарплата сотрудников");
     private final SelenideAppiumElement titleMySalary = elementByXpathText("Моя зарплата");
@@ -61,11 +67,13 @@ public class StatisticPage {
     /**
      * Основная страница раздела Статистика для Android Арника
      */
+    private final SelenideAppiumElement clientsA = elementByXpathText("Клиенты");
     private final SelenideAppiumElement btnSwitchCurrentDayStatisticA = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.widget.Button");
     private final SelenideAppiumElement btnUpdateStatisticA = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[1]");
     /**
      * Основная страница раздела Статистика для Android SQNS
      */
+    private final SelenideAppiumElement clientsS = elementByXpathText("Пациенты");
     private final SelenideAppiumElement btnUpdateStatisticS = elementByXpath("(//android.widget.Button[@resource-id=\"icon-button\"])[1]");
     private final SelenideAppiumElement btnSwitchCurrentDayStatisticS = elementByXpath("(//android.widget.Button[@resource-id=\"icon-button\"])[4]");
 
@@ -84,7 +92,7 @@ public class StatisticPage {
      * Конструктор на проверку видимости загрузки страницы
      */
     public StatisticPage() {
-        titleStatistic.shouldBe(visible);
+        titleStatistic.shouldBe(visible, Duration.ofSeconds(10));
     }
 
     /**
@@ -105,16 +113,16 @@ public class StatisticPage {
     @Step("Переход на страницу клиентов/пациентов")
     public ClientsPage goToClients() {
         if (arnica) {
-            slowClick(elementByXpathText("Клиенты"));
+            slowClick(clientsA);
         } else if (sqns) {
-            slowClick(elementByXpathText("Пациенты"));
+            slowClick(clientsS);
         }
         return new ClientsPage();
     }
 
-    @Step("Переход на страницу клиентов/пациентов")
+    @Step("Переход на страницу расписания")
     public SchedulePage goToSchedule() {
-        slowClick(elementByXpathText("Расписание"));
+        slowClick(schedule);
         return new SchedulePage();
     }
 
@@ -126,7 +134,7 @@ public class StatisticPage {
         } else if (sqns) {
             btnUpdateStatisticS.click();
         }
-        return new StatisticPage();
+        return this;
     }
 
     @Step("Переключаем статистику на предыдущий день")
@@ -142,27 +150,27 @@ public class StatisticPage {
         } else {
             btnSelectPrevDay.should(visible).click();
         }
-        return new StatisticPage();
+        return this;
     }
 
     @Step("Переключаем статистику на следующий день")
     public StatisticPage nextSwitchDayStatistic() {
         btnSelectNextDay.should(visible).click();
-        return new StatisticPage();
+        return this;
     }
 
     @Step("Переключаем статистику по неделям")
     public StatisticPage switchStaticOnWeek() {
         btnConfigStatic.should(visible).click();
         btnOptionStatisticOnWeek.should(visible).click();
-        return new StatisticPage();
+        return this;
     }
 
     @Step("Переключаем статистику по месяцам")
     public StatisticPage switchStaticOnMonth() {
         btnConfigStatic.should(visible).click();
         btnOptionStatisticOnMonths.should(visible).click();
-        return new StatisticPage();
+        return this;
     }
 
     @Step("Проверяем заголовки страницы Статистика (страница отображается верно)")
@@ -174,14 +182,14 @@ public class StatisticPage {
         String mySalary = "Моя зарплата";
 
         titleFinancesStatistic.should(visible).shouldHave(exactText(finances));
-        titleVisitsStatistc.shouldHave(exactText(visits));
+        titleVisitsStatistic.shouldHave(exactText(visits));
         swipe(mainStatisticForSwipe, "up", 50);
         titleCashboxStatistic.should(visible).shouldHave(exactText(cashBox));
         swipe(mainStatisticForSwipe, "up", 50);
         titleSalaryEmployees.shouldHave(exactText(salaryEmployee));
         swipe(mainStatisticForSwipe, "up", 50);
         titleMySalary.should(visible).shouldHave(exactText(mySalary));
-        return new StatisticPage();
+        return this;
     }
 }
 

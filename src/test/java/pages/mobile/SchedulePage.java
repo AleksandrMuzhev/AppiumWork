@@ -1,4 +1,4 @@
-package pages;
+package pages.mobile;
 
 import static com.codeborne.selenide.Condition.visible;
 import static config.ConfigReader.arnica;
@@ -25,11 +25,15 @@ import java.time.Duration;
 import io.qameta.allure.Step;
 import lombok.Getter;
 
+/**
+ * Страница расписания
+ */
 public class SchedulePage {
 
     /**
      * Основная страница раздела Расписание для Android (Все продукты)
      */
+    @Getter
     private final SelenideAppiumElement textTitleSchedule = elementByXpathText("Расписание");
     private final SelenideAppiumElement enterFilter = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[1]");
     private final SelenideAppiumElement configTable = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.widget.Button[2]");
@@ -48,6 +52,7 @@ public class SchedulePage {
     @Getter
     private final SelenideAppiumElement btnSelectDayNextMonth = elementByXpathText(dayOfMonthNext());
     private final SelenideAppiumElement btnSelectCurrentDay = elementByXpathText(dayOfMonthCurrent());
+    private final SelenideAppiumElement btnAddEmployeePage = elementByContentDesc("Добавить сотрудника");
     /**
      * Основная страница раздела Расписание для Android Арника
      */
@@ -112,12 +117,18 @@ public class SchedulePage {
     /**
      * Элементы кнопки "+" в Расписании для Android Арника
      */
-    private final SelenideAppiumElement btnPlus = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.widget.Button");
+    private final SelenideAppiumElement btnPlusA = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[3]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.widget.Button");
     private final SelenideAppiumCollection bottomSheetOverPlus = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]");
     private final SelenideAppiumElement btnAddEmployee = elementByXpathText("Добавить сотрудника");
     private final SelenideAppiumElement btnNewVisit = elementByXpathText("Новый визит");
     @Getter
     private final SelenideAppiumElement titleSelectEmployeeSchedule = elementByXpathText("Выберите сотрудника");
+
+    /**
+     * Элементы кнопки "+" в Расписании для Android Арника
+     */
+    private final SelenideAppiumElement btnPlusS = elementByResourceId("fab");
+
 
     /**
      * Конструктор на проверку видимости загрузки страницы
@@ -132,9 +143,9 @@ public class SchedulePage {
 
     public SelenideAppiumElement getBtnPlus() {
         if (arnica) {
-            return btnPlus;
+            return btnPlusA;
         } else if (sqns) {
-            return elementByResourceId("fab");
+            return btnPlusS;
         }
         return null;
     }
@@ -187,16 +198,19 @@ public class SchedulePage {
 
     @Step("Просмотр расписания сотрудника по неделям")
     public SchedulePage viewScheduleByWeek() {
+        if (!employeesSchedule.get(0).exists()) {
+            btnAddEmployeePage.click();
+        }
         employeesSchedule.get(0).click();
         elementByXpathText("Расписание на неделю").click();
         return new SchedulePage();
     }
 
     @Step("Нажимаем на Новый визит в кнопке Плюс из Расписания")
-    public SchedulePage clickOnNewVisitInBtnPlus() {
+    public DateVisit clickOnNewVisitInBtnPlus() {
         getBtnPlus().should(visible, Duration.ofSeconds(5)).click();
         btnNewVisit.should(visible).click();
-        return new SchedulePage();
+        return new DateVisit();
     }
 
     @Step("Нажимаем на Добавление сотрудника в кнопке Плюс из Расписания")
@@ -214,10 +228,14 @@ public class SchedulePage {
     }
 
 
-    @Step("Переходим в настройки фильтра Расписания и выбираем Кабинеты")
+    @Step("Переходим в настройки фильтра Расписания и выбираем Кабинеты/Пациенты")
     public SchedulePage goToConfigFilterScheduleSelectCabinets() {
         getConfigFilter().should(visible).click();
-        elementByXpathText("Кабинеты").click();
+        if (arnica) {
+            elementByXpathText("Кабинеты").click();
+        } else if (sqns) {
+            elementByXpathText("Пациенты").click();
+        }
         btnApplyFilter.should(visible).click();
         return new SchedulePage();
     }
@@ -225,7 +243,7 @@ public class SchedulePage {
     @Step("Тянем страницу Расписания для обновления")
     public SchedulePage updateScheduleSwipe() {
         swipe(mainContentForSwipe, "down", 50);
-        return new SchedulePage();
+        return this;
     }
 
 

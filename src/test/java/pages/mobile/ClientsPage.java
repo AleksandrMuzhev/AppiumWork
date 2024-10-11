@@ -11,6 +11,7 @@ import static driver.EmulatorHelper.elementByResourceId;
 import static driver.EmulatorHelper.elementByXpath;
 import static driver.EmulatorHelper.elementByXpathText;
 import static driver.EmulatorHelper.slowClick;
+import static driver.EmulatorHelper.swipe;
 
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.appium.SelenideAppiumCollection;

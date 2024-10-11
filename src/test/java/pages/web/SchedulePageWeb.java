@@ -12,6 +12,9 @@ import com.codeborne.selenide.appium.SelenideAppiumElement;
 
 import org.openqa.selenium.By;
 
+/**
+ * Страница расписания в браузере
+ */
 public class SchedulePageWeb {
     private final SelenideAppiumCollection linkTitleMenu = $$(By.cssSelector("div.layout-general-wrapper.ng-isolate-scope a > span:nth-child(2)"));
     private final SelenideAppiumElement salesLink = $(By.linkText("Продажи"));

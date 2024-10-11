@@ -69,7 +69,7 @@ public class SchedulePage {
      */
     private final SelenideAppiumElement titleFilterConfigSchedule = elementByXpathText("Фильтр");
     private final SelenideAppiumElement btnCloseConfigFilter = elementByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.widget.Button");
-    private final SelenideAppiumElement textViewInSchedule = elementByXpathText("Показывать в расписании\"]");
+    private final SelenideAppiumElement textViewInSchedule = elementByXpathText("Показывать в расписании");
     private final SelenideAppiumCollection btnCollectionViewInSchedule = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]");
     private final SelenideAppiumElement textViewPosition = elementByXpathText("Отображаемые должности");
     private final SelenideAppiumCollection btnCollectionViewPosition = collectionByXpath("//android.widget.FrameLayout[@resource-id=\"android:id/content\"]/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[4]/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup[2]/android.view.ViewGroup/android.view.ViewGroup/android.widget.ScrollView/android.view.ViewGroup");

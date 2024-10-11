@@ -8,6 +8,11 @@ import com.codeborne.selenide.appium.SelenideAppiumElement;
 
 import org.openqa.selenium.By;
 
+import io.qameta.allure.Step;
+
+/**
+ * Справочник пациентов/клиентов в браузере
+ */
 public class ClientInfoWeb {
     private final SelenideAppiumElement titlePage = $(By.cssSelector("div.content-title"));
     private final SelenideAppiumElement submitFilter = $(By.cssSelector(".ibutton_svg-filter"));
@@ -20,6 +25,7 @@ public class ClientInfoWeb {
         titlePage.shouldBe(visible);
     }
 
+    @Step("Проверяем ФИО и телефон добавленного клиента в справочнике браузера")
     public ClientInfoWeb checkClientVisible(String name, String phone) {
         submitFilter.click();
         nameType.sendKeys(name);

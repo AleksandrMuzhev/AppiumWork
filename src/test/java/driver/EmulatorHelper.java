@@ -72,17 +72,33 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
 //     *
 //     * @param text текст на элементе
 //     */
-//    public static void androidScrollToAnElementByText(String text) { // Метод для скроллинга к методу, который определен по тексту
-//        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
-//                ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
-//                ".textContains(\"" + text + "\").instance(0))";
-//        if (platformAndroid) {
-//            AndroidDriver androidDriver = (AndroidDriver) driver;
-//            (androidDriver).findElementByAndroidUIAutomator(command); //Вызываем метод UIAutomator и передаем описанную выше команду
-//        } else if (platformIOS) {
-//            IOSDriver iosDriver = (IOSDriver) driver;
-//            (iosDriver).findElement(MobileBy.iOSNsPredicateString(command)); //Вызываем метод UIAutomator и передаем описанную выше команду
-//        }
+//    public static void androidScrollToAnElementByText(SelenideAppiumElement element, String text) { // Метод для скроллинга к методу, который определен по тексту
+//// Получаем границы элемента
+//        Rectangle bounds = element.getRect();
+//
+//// Вычисляем центр элемента
+//        int centerX = bounds.getX() + bounds.getWidth() / 2;
+//        int centerY = bounds.getY() + bounds.getHeight() / 2;
+//
+//// Находим элемент с указанным текстом
+//        SelenideElement textElement = element.$(By.xpath(".//*[contains(@text, '" + text + "')]")).as(String.valueOf(SelenideAppiumElement.class));
+//
+//// Вычисляем смещение для свайпа к элементу с текстом
+//        int offsetX = textElement.getWrappedElement().getRect().getX() - centerX;
+//        int offsetY = textElement.getWrappedElement().getRect().getY() - centerY;
+//
+//// Определяем направление свайпа
+//        String direction = offsetY > 0 ? "down" : "up";
+//
+//        String elementId = ((RemoteWebElement) textElement.getWrappedElement()).getId();
+//
+//// Свайпаем к элементу с текстом
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("elementId", elementId);
+//        params.put("percentage", 0.5); // процент смещения
+//        params.put("direction", direction);
+//
+//        driver.executeScript("gesture: swipe", params);
 //    }
 //
 //    /**
@@ -250,6 +266,16 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      */
     public static SelenideAppiumElement elementByContentDesc(String contentDesc) {
         return $x("//*[@content-desc='" + contentDesc + "']");
+    }
+
+    /**
+     * Метод для обращения по коллекции content-desc
+     *
+     * @param contentDesc
+     * @return
+     */
+    public static SelenideAppiumCollection collectionByContentDesc(String contentDesc) {
+        return $$(xpath("//*[@content-desc='" + contentDesc + "']"));
     }
 
     /**

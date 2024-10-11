@@ -7,6 +7,9 @@ import com.codeborne.selenide.appium.SelenideAppiumElement;
 
 import org.openqa.selenium.By;
 
+/**
+ * Страница админки в браузере
+ */
 public class RootPageWeb {
     //    private final String employee = DataHelper.getUserInfoWeb().getUser();
     private final SelenideAppiumElement titleText = $(By.cssSelector("h1"));

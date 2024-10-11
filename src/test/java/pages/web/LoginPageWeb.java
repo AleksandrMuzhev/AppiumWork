@@ -9,6 +9,9 @@ import org.openqa.selenium.By;
 
 import helper.DataHelper;
 
+/**
+ * Страница авторизации "root" в браузере
+ */
 public class LoginPageWeb {
     private final SelenideAppiumElement titleText = $(By.cssSelector("h1"));
     private final SelenideAppiumElement loginType = $(By.cssSelector("#RootLoginForm_login"));

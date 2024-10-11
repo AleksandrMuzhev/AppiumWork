@@ -25,7 +25,6 @@ import driver.WebDriverHelper;
 import helper.DataHelper;
 import io.appium.java_client.AppiumDriver;
 import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.cucumber.java.ru.Допустим;
 import io.cucumber.java.ru.Затем;
 import io.cucumber.java.ru.И;
@@ -33,10 +32,15 @@ import io.cucumber.java.ru.Пусть;
 import io.cucumber.java.ru.Тогда;
 import pages.mobile.AuthPage;
 import pages.mobile.ClientsPage;
+import pages.mobile.CommodityPage;
+import pages.mobile.CreateCommodityPage;
+import pages.mobile.CreateServicePage;
 import pages.mobile.DateVisit;
+import pages.mobile.MainPage;
 import pages.mobile.RatePageWidget;
 import pages.mobile.SchedulePage;
 import pages.mobile.SelectEmployeePage;
+import pages.mobile.ServicePage;
 import pages.mobile.StatisticPage;
 import pages.mobile.TimeStart;
 import pages.mobile.VisitPage;
@@ -52,6 +56,7 @@ public class FeatureContext extends EmulatorDriver {
     String surname = DataHelper.getUserInfo().getSurname();
     String patronymic = DataHelper.getUserInfo().getPatronymic();
     String phone = DataHelper.getUserInfo().getPhone();
+    String food = DataHelper.generateFood().getFood();
 
     private AuthPage authPage = new AuthPage();
     private ClientsPage clientsPage;
@@ -66,6 +71,11 @@ public class FeatureContext extends EmulatorDriver {
     private LoginPageWeb loginPageWeb;
     private RootPageWeb rootPageWeb;
     private SchedulePageWeb schedulePageWeb;
+    private MainPage mainPage;
+    private CommodityPage commodityPage;
+    private CreateCommodityPage createCommodityPage;
+    private ServicePage servicePage;
+    private CreateServicePage createServicePage;
 
     /**
      * Отключение анимаций на эмуляторе чтобы не лагало
@@ -76,21 +86,15 @@ public class FeatureContext extends EmulatorDriver {
         executeBash("adb -s shell settings put global animator_duration_scale 0.0"); //Отключаем длительность этой анимации
     }
 
-    @Before
-    public static void setup() {
+    @Допустим("открываю приложение")
+    public void setUp() {
         if (!isSetupDone) {
-//            Инициализация AndroidDriver, напрямую нигде не взаимодействуем. runHelper возвращает конструктор по-умолчанию и вызывает getDriverClass и получаем название device
             Configuration.browser = runHelper().getDriverClass().getName();
-//        Configuration.startMaximized = false; //Эмулятор не будет стартовать на весь экран
-            Configuration.browserSize = null; //Не указываем размер, так как зависеть будет от устройства
+            Configuration.browserSize = null;
             Configuration.timeout = 10000; //Ограничение по времени для взаимодействия с элементом
             disableAnimationOnEmulator(); //Вызываем метод в связи с тем, что ПК при запуске эмулятора может подвиснуть. При отключении настроек анимации проблема решается
             isSetupDone = true;
         }
-    }
-
-    @Допустим("открываю приложение")
-    public void setUp() {
         if (driver == null) {
             driver = (AppiumDriver) new EmulatorDriver().createDriver(null);
             WebDriverRunner.setWebDriver(driver);
@@ -168,7 +172,21 @@ public class FeatureContext extends EmulatorDriver {
             case "SchedulePageWeb":
                 schedulePageWeb = new SchedulePageWeb();
                 break;
-            // Добавьте другие страницы по мере необходимости
+            case "MainPage":
+                mainPage = new MainPage();
+                break;
+            case "CommodityPage":
+                commodityPage = new CommodityPage();
+                break;
+            case "CreateCommodityPage":
+                createCommodityPage = new CreateCommodityPage();
+                break;
+            case "ServicePage":
+                servicePage = new ServicePage();
+                break;
+            case "CreateServicePage":
+                createServicePage = new CreateServicePage();
+                // Добавьте другие страницы по мере необходимости
             default:
                 throw new IllegalArgumentException("Неизвестная страница: " + pageName);
         }
@@ -217,7 +235,21 @@ public class FeatureContext extends EmulatorDriver {
             case "SchedulePageWeb":
                 schedulePageWeb = new SchedulePageWeb();
                 break;
-            // Добавьте другие страницы по мере необходимости
+            case "MainPage":
+                mainPage = new MainPage();
+                break;
+            case "CommodityPage":
+                commodityPage = new CommodityPage();
+                break;
+            case "CreateCommodityPage":
+                createCommodityPage = new CreateCommodityPage();
+                break;
+            case "ServicePage":
+                servicePage = new ServicePage();
+                break;
+            case "CreateServicePage":
+                createServicePage = new CreateServicePage();
+                // Добавьте другие страницы по мере необходимости
             default:
                 throw new IllegalArgumentException("Неизвестная страница: " + pageName);
         }
@@ -239,25 +271,6 @@ public class FeatureContext extends EmulatorDriver {
     public void userAuthWithRegisterData() {
         ratePageWidget = authPage.authRegisterDate();
     }
-
-//    @И("перехожу в справочник клиентов в браузере")
-//    public void goToInfoClients() {
-//        var urlWeb = DataHelper.getUrlInfo();
-//        var authInfoWeb = DataHelper.getUserInfoWeb();
-//        open(urlWeb.getUrl());
-//        $(By.id("RootLoginForm_login")).sendKeys(LOGIN_WEB);
-//        $(By.id("RootLoginForm_password")).sendKeys(PASSWORD_WEB);
-//        $(By.cssSelector("input[type=submit]")).click();
-//        $(By.cssSelector("input[title=\"Что-нибудь - название, имя, емэйл\"]")).sendKeys(authInfoWeb.getUser());
-//        $(By.cssSelector("div.field.search-submit-button > button")).click();
-//        $(By.linkText(authInfoWeb.getUser())).click();
-//        $(By.linkText("Продажи")).click();
-//        if (arnica) {
-//            $(By.linkText("Клиенты")).click();
-//        } else if (sqns) {
-//            $(By.linkText("Пациенты")).click();
-//        }
-//    }
 
     @И("создаю клиента {string} {string} {string} {string} c номером телефона {string}")
     public void clientNewWithPhone(String numberCard, String name, String surname, String
@@ -499,4 +512,45 @@ public class FeatureContext extends EmulatorDriver {
 //        sendKeysAndFind(element, text);
 //    }
 
+    @И("создаю товар с случайными данными")
+    public void commodityNewRandom() {
+        createCommodityPage = commodityPage.goToCreateCommodity();
+        commodityPage = createCommodityPage.createRandomCommodity(food);
+    }
+
+    @И("фильтрую справочник товаров по случайному названию")
+    public void filterCommodity() {
+        commodityPage.filterFoodName(food);
+    }
+
+    @Тогда("вижу добавленный товар с случайными данными в результате фильтра")
+    public void checkCommodityRandomInInfo() {
+        commodityPage.checkResultClientSearch(food);
+    }
+
+
+//    @Тогда("вижу добавленного клиента с случайными данными в справочнике браузера")
+//    public void checkClientAddRandomInfo() {
+//        String formattedPhone = DataHelper.generateFormattedPhone(phone);
+//        String fullname = surname + " " + name + " " + patronymic;
+//        clientInfoWeb.checkClientVisible(fullname, formattedPhone);
+//    }
+
+
+
+    @И("создаю услугу с случайными данными")
+    public void serviceNewRandom() {
+        createServicePage = servicePage.goToCreateService();
+        servicePage = createServicePage.createService(food);
+    }
+
+    @И("фильтрую справочник услуг по случайному названию")
+    public void filterService() {
+        servicePage.filterServiceName(food);
+    }
+
+    @Тогда("вижу добавленную услугу с случайными данными в результате фильтра")
+    public void checkServiceRandomInInfo() {
+        commodityPage.checkResultClientSearch(food);
+    }
 }

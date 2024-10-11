@@ -94,12 +94,18 @@ public class DataHelper {
         String phone;
     }
 
+    @Value
+    public static class FoodInfo {
+        String food;
+    }
+
     /**
      * Генерация случайных данных
      */
     public static long generateNumberCard() {
         return faker.number().randomNumber();
     }
+
     public static String generateFirstName() {
         return faker.name().firstName();
     }
@@ -147,6 +153,17 @@ public class DataHelper {
         String[] roomTypes = {"Кардиология", "Дерматология", "Педиатрия", "Ортопедия", "Онкология", "Неврология", "Гинекология"};
         String roomType = faker.options().option(roomTypes);
         return roomType;
+    }
+
+    // Генерация случайных названий складов
+    public static String generateStorage() {
+        String[] storageNames = {"Склад1", "Склад2", "Склад3", "Склад4", "Склад5", "Склад6", "Склад7", "Склад8", "Склад9", "Склад10", "Склад11", "Склад12", "Склад13", "Склад14", "Склад15"};
+        String storageName = faker.options().option(storageNames);
+        return storageName;
+    }
+
+    public static FoodInfo generateFood() {
+        return new FoodInfo(faker.food().fruit());
     }
 
     public static UserInfo getUserInfo() {

@@ -3,6 +3,9 @@ package config;
 
 import org.aeonbits.owner.Config;
 
+/**
+ * Чтение ключей из test.properties
+ */
 @Config.LoadPolicy(Config.LoadType.MERGE)
 @Config.Sources({ //Указываем, что читаем properties и то, что находится в файле test.properties
         "system:properties", //означает, что на вход подаются настройки, если мы запускаем внешние аргументы
@@ -10,10 +13,10 @@ import org.aeonbits.owner.Config;
 })
 public interface TestConfig extends Config {
     @Key("updateScreenshots")
-    @DefaultValue("false")
-        //устанавливаем значение по-умолчанию, если в файле настроек ничего не задано
+    @DefaultValue("false") //устанавливаем значение по-умолчанию, если в файле настроек ничего не задано
     boolean isScreenshotsNeedToUpdate();//метод для обозначения по ключу
 
+    //достаем значения по ключу
     @Key("deviceHost")
-    String deviceHost(); //метод для обозначения по ключу
+    String deviceHost();
 }

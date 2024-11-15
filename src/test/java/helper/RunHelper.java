@@ -4,7 +4,7 @@ import config.ConfigReader;
 import driver.EmulatorDriver;
 
 /**
- * Класс помощник для создания универсального инстанса AndroidDriver
+ * Класс помощник для создания универсального инстанса AppiumDriver
  */
 public class RunHelper {
     private RunHelper() {
@@ -42,3 +42,4 @@ public class RunHelper {
         }
     }
 }
+

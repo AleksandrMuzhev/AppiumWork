@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.9.6'
+    id("io.qameta.allure") version "2.9.6"
 }
 
 group = 'ru.ittechnology'
@@ -14,35 +14,39 @@ tasks.withType(JavaCompile) {
     options.release = 17
 }
 
-def allureVersion = '2.29.0', //Для урегулирования конфликта версий в зависимостях в случае их доп-я
+//Для урегулирования конфликта версий в зависимостях в случае их доп-я
+def allureVersion = '2.13.9',
     junitVersion = '5.8.2',
     slf4jVersion = '1.7.32',
-    cucumberVersion = '7.18.1'
+    cucumberVersion = '7.3.2'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    implementation 'com.github.sarxos:ffmpeg:0.11.1' // для захвата видео в тестах
     implementation 'com.github.javafaker:javafaker:1.0.2'
-    testImplementation "com.github.romankh3:image-comparison:4.4.0"
+    implementation 'com.codeborne:selenide-appium:7.4.2' //для использования инструментов взаимодействия в тестах + для подключения к appium-server и настройки связи с вашим кодом
+    runtimeOnly 'org.aspectj:aspectjweaver:1.9.8'
     //библиотека для сравнения скриншотов: эскиз и тот, что на экране (например, сравнение верстки)
     testImplementation(
             "io.qameta.allure:allure-junit5:$allureVersion", //для описания шагов в allure
-            "com.codeborne:selenide:5.25.0", //для использования инструментов взаимодействия в тестах + для использования PageObject
             "io.qameta.allure:allure-selenide:$allureVersion", //для логирования действий в степах (например, клик -> получили скриншот)
-            "io.appium:java-client:7.6.0", //для подключения к appium-server и настройки связи с вашим кодом
             "org.aeonbits.owner:owner:1.0.12", //для чтения файла с расширением .properties и применения нужных настроек в проекте (чтение значения по ключу)
             "org.junit.jupiter:junit-jupiter-api:$junitVersion", //тестовые аннотации (тестовый фреймворк)
             "io.cucumber:cucumber-junit-platform-engine:$cucumberVersion",
-            "org.junit.platform:junit-platform-suite:1.10.0"
+            "io.cucumber:cucumber-java:$cucumberVersion",
+            "org.junit.platform:junit-platform-suite:1.10.0",
+            "com.github.romankh3:image-comparison:4.4.0",
+            "io.qameta.allure:allure-cucumber5-jvm:$allureVersion" // Для интеграции Cucumber с Allure
     )
     testRuntimeOnly(
             "org.slf4j:slf4j-simple:$slf4jVersion", //для логирования
             "org.junit.jupiter:junit-jupiter-engine:$junitVersion" //для работы всех тестов
     )
-
-//    testImplementation "io.cucumber:cucumber-java:$cucumberVersion"
+    testCompileOnly 'org.projectlombok:lombok:1.18.34'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
 }
 
 test {
@@ -58,5 +62,28 @@ test {
 
 task runMultipleTests(type: Test) {
     useJUnitPlatform() // для JUnit 5
-    include 'tests/StatisticTest.class', 'tests/ScheduleTest.class', 'tests/VisitTest.class', 'tests/ClientsTest.class' // укажите ваши тестовые классы для запуска одновременно
+    include 'tests/StatisticTest.class', 'tests/ScheduleTest.class', 'tests/VisitTest.class', 'tests/ClientsTest.class'
+    // укажите ваши тестовые классы для запуска одновременно
+}
+
+task runCucumberTests(type: Test) {
+    useJUnitPlatform()
+
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    // путь к фиче-файлам
+//    systemProperty 'cucumber.features', file('src/test/resources/features').absolutePath
+    // путь к определенному фиче-файлу
+    systemProperty 'cucumber.features', file('src/test/resources/features/auth1.feature')
+    
+    // путь к glue-коду
+    systemProperty 'cucumber.glue', 'steps' // пакет с step definitions
+
+    // Установка кодировки
+    systemProperty 'file.encoding', 'UTF-8'
+    outputs.upToDateWhen { false } // для того, чтобы изменения применялись каждый раз
+
+    // Исключить тесты из test/java
+    exclude 'src/test/java/**'
 }

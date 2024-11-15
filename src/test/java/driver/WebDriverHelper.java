@@ -1,45 +1,34 @@
 package driver;
 
+import static com.codeborne.selenide.Selenide.open;
+
 import com.codeborne.selenide.SelenideConfig;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.WebDriverRunner;
 
-import org.openqa.selenium.chrome.ChromeOptions;
+import javax.xml.crypto.Data;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import tests.BaseTest;
+import helper.DataHelper;
+import pages.web.LoginPageWeb;
 
 /**
- * Класс помощник для переключения драйвера на Web версию и открытие браузера (например, chrome)
+ * Класс помощник для переключения драйвера на Web версию, открытие и закрытие браузера (например, chrome)
  */
-public class WebDriverHelper extends BaseTest {
-    public static void setWebDriver() {
-        // Установка версии браузера через System.setProperty
-        System.setProperty("selenide.browserVersion", "114.0.5735.199");
+public class WebDriverHelper {
 
-        SelenideConfig config = new SelenideConfig()
-                .browser("chrome")
-                .browserVersion(System.getProperty("selenide.browserVersion"));
+    //Приватный конструктор, который предотвращает создание экземпляров.
+    private WebDriverHelper() {
+    }
 
-        // Дополнительные настройки, как указано ранее
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.setBinary("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe");
-        config.browserCapabilities().setCapability(ChromeOptions.CAPABILITY, options);
-
+    public static LoginPageWeb setWebDriver() {
+        SelenideConfig config = new SelenideConfig().browser("chrome").browserSize("1680x1050");
         SelenideDriver driver = new SelenideDriver(config);
         WebDriverRunner.setWebDriver(driver.getAndCheckWebDriver());
+        open(DataHelper.getUrlInfo().getUrl());
+        return new LoginPageWeb();
+    }
 
-
-//        // Используем WebDriverManager для управления драйверами
-//        WebDriverManager.chromedriver().setup();
-//
-//        ChromeOptions options = new ChromeOptions();
-//        options.setBinary("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe");
-//
-//        DesiredCapabilities capabilities = new DesiredCapabilities();
-//        capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-//
-//        Configuration.browserCapabilities = capabilities;
+    public static void tearDownWeb() {
+        WebDriverRunner.getWebDriver().close();
     }
 }

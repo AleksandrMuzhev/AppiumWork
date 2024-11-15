@@ -3,15 +3,24 @@ package driver;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.actions;
+import static com.codeborne.selenide.appium.SelenideAppium.$;
+import static com.codeborne.selenide.appium.SelenideAppium.$$;
+import static com.codeborne.selenide.appium.SelenideAppium.$x;
+import static org.openqa.selenium.By.xpath;
 import static config.ConfigReader.platformAndroid;
 import static config.ConfigReader.platformIOS;
 
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.appium.SelenideAppiumCollection;
+import com.codeborne.selenide.appium.SelenideAppiumElement;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.remote.RemoteWebElement;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import io.appium.java_client.MobileBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 
@@ -19,6 +28,11 @@ import io.appium.java_client.ios.IOSDriver;
  * Класс помощник для Page страниц
  */
 public class EmulatorHelper extends EmulatorDriver { //Наследуемся от класса EmulatorDriver, поэтому есть доступ к переменной driver
+
+    //Приватный конструктор, который предотвращает создание экземпляров.
+    private EmulatorHelper() {
+    }
+
     /**
      * Нажимает кнопку назад
      */
@@ -31,12 +45,14 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      */
     public static void closeKeyBoard() { //Метод для закрытия клавиатуры
         if (platformAndroid) {
-            if (((AndroidDriver<?>) driver).isKeyboardShown()) { //Если клавиатура открыта, то далее закрываем ее
-                driver.hideKeyboard();
+            AndroidDriver androidDriver = (AndroidDriver) driver;
+            if (androidDriver.isKeyboardShown()) { //Если клавиатура открыта, то далее закрываем ее
+                androidDriver.hideKeyboard();
             }
         } else if (platformIOS) {
-            if (((IOSDriver<?>) driver).isKeyboardShown()) { //Если клавиатура открыта, то далее закрываем ее
-                driver.hideKeyboard();
+            IOSDriver iosDriver = (IOSDriver) driver;
+            if (iosDriver.isKeyboardShown()) { //Если клавиатура открыта, то далее закрываем ее
+                iosDriver.hideKeyboard();
             }
         }
     }
@@ -48,7 +64,7 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      * @param text    текст
      */
     public static void sendKeysAndFind(SelenideElement element, String text) { //Метод для ввода данных в поля
-        element.should(visible).sendKeys(text);
+        element.sendKeys(text);
 //        driver.pressKey(new KeyEvent(AndroidKey.ENTER)); //Вызываем метод для нажатия кнопки ENTER
     }
 
@@ -57,57 +73,44 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
      *
      * @param text текст на элементе
      */
-    public static void androidScrollToAnElementByText(String text) { // Метод для скроллинга к методу, который определен по тексту
-        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
-                ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
-                ".textContains(\"" + text + "\").instance(0))";
-        if (platformAndroid) {
-            ((AndroidDriver<?>) driver).findElementByAndroidUIAutomator(command); //Вызываем метод UIAutomator и передаем описанную выше команду
-        } else if (platformIOS) {
-            ((IOSDriver<?>) driver).findElement(MobileBy.iOSNsPredicateString(command)); //Вызываем метод UIAutomator и передаем описанную выше команду
-        }
-    }
+    public static void androidScrollToAnElementByText(SelenideAppiumElement element, String text) { // Метод для скроллинга к методу, который определен по тексту
+// Получаем границы элемента
+        Rectangle bounds = element.getRect();
 
-    /**
-     * Листает к 1-му элементу по его тексту и нажимает на элемент
-     *
-     * @param text текст на элементе
-     */
-    public static void androidScrollToAnElementByTextWithClick(String text) { // Метод для скроллинга к методу, который определен по тексту
-        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
-                ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()" +
-                ".textContains(\"" + text + "\").instance(0))";
-        if (platformAndroid) {
-            ((AndroidDriver<?>) driver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
-        } else if (platformIOS) {
-            ((IOSDriver<?>) driver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
-        }
-    }
+// Вычисляем центр элемента
+        int centerX = bounds.getX() + bounds.getWidth() / 2;
+        int centerY = bounds.getY() + bounds.getHeight() / 2;
 
-    /**
-     * Листает к следующему за 1-м элементом 2-му элементу по его тексту и нажимает на элемент
-     *
-     * @param text текст на элементе
-     */
-    public static void androidScrollToAnElementBySecondTextWithClick(String text) { // Метод для скроллинга к методу, который определен по тексту
-        String command = "new UiScrollable(new UiSelector()" + //Метод UiCrollable отправляется к Appium вдвойне на обработку, с помощью Selector ищем возможность пролистать, берем самое 1-е значение и через ScrollIntoView пролистываем к элементу, текст которого будет передан в новый UiSelector
-                ".scrollable(true).instance(1)).scrollIntoView(new UiSelector()" +
-                ".textContains(\"" + text + "\").instance(1))";
-        if (platformAndroid) {
-            ((AndroidDriver<?>) driver).findElementByAndroidUIAutomator(command).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
-        } else if (platformIOS) {
-            ((IOSDriver<?>) driver).findElement(MobileBy.iOSNsPredicateString(command)).click(); //Вызываем метод UIAutomator и передаем описанную выше команду
-        }
+// Находим элемент с указанным текстом
+        SelenideElement textElement = element.$(By.xpath(".//*[contains(@text, '" + text + "')]")).as(String.valueOf(SelenideAppiumElement.class));
+
+// Вычисляем смещение для свайпа к элементу с текстом
+        int offsetX = textElement.getWrappedElement().getRect().getX() - centerX;
+        int offsetY = textElement.getWrappedElement().getRect().getY() - centerY;
+
+// Определяем направление свайпа
+        String direction = offsetY > 0 ? "down" : "up";
+
+        String elementId = ((RemoteWebElement) textElement.getWrappedElement()).getId();
+
+// Свайпаем к элементу с текстом
+        Map<String, Object> params = new HashMap<>();
+        params.put("elementId", elementId);
+        params.put("percentage", 0.5); // процент смещения
+        params.put("direction", direction);
+
+        driver.executeScript("gesture: swipe", params);
     }
 
     /**
      * Имитирует свайп для обновления страницы (например, потянуть вниз).
      * Для использования передаем: xpath-локатор элемента в параметры; направление: right, left, down, up; процент смахивания относительно ширины или высоты
      */
-    public static void swipeToRefresh(SelenideElement element, String direction, int percent) {
+    public static void swipe(SelenideAppiumElement element, String direction, int percent) {
+        String elementId = ((RemoteWebElement) element.getWrappedElement()).getId();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("elementId", element.should(visible).getId());
+        params.put("elementId", elementId);
         params.put("percentage", percent);
         params.put("direction", direction);
 
@@ -115,28 +118,121 @@ public class EmulatorHelper extends EmulatorDriver { //Наследуемся о
         driver.executeScript("gesture: swipe", params);
     }
 
-//    /**
-//     * Имитирует свайп для поиска определенного элемента .
-//     * Для использования передаем: xpath-локатор элемента в параметры; целевой атрибут xpath; направление: right, left, down, up; процент смахивания относительно ширины или высоты
-//     */
-//    public static void scrollElementIntoView(SelenideElement elementScroll, String findElement, String direction, int percent) {
-//
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("scrollableView", elementScroll.should(visible).getId());
-//        params.put("strategy", "xpath");
-//        params.put("selector", findElement);
-//        params.put("percentage", percent);
-//        params.put("direction", direction);
-//        params.put("maxCount", 3);
-//
-//        driver.executeScript("gesture: scrollElementIntoView", params);
-//    }
-
     /**
      * Метод для клика с задержкой
      */
-    public static void slowClick(SelenideElement element) {
-        actions().moveToElement(element).pause(5000).click().perform(); // Задержка в 3 секунд (3000 миллисекунд)
+    public static void slowClick(SelenideAppiumElement element) {
+        actions().moveToElement(element).pause(5000).click().perform(); // Задержка в 5 секунд (5000 миллисекунд)
     }
 
+    /**
+     * Метод для обращения по xpath
+     *
+     * @param xpath
+     * @return
+     */
+    public static SelenideAppiumElement elementByXpath(String xpath) {
+        return $x(xpath);
+    }
+
+    /**
+     * Метод для обращения по коллекции xpath
+     *
+     * @param xpath
+     * @return
+     */
+    public static SelenideAppiumCollection collectionByXpath(String xpath) {
+        return $$(xpath(xpath));
+    }
+
+    /**
+     * Метод для обращения по xpath(resourceId)
+     *
+     * @param resourceId
+     * @return
+     */
+    public static SelenideAppiumElement elementByResourceId(String resourceId) {
+        return $x("//*[@resource-id='" + resourceId + "']");
+    }
+
+    /**
+     * Метод для обращения по коллекции xpath(resourceId)
+     *
+     * @param resourceId
+     * @return
+     */
+    public static SelenideAppiumCollection collectionByResourceId(String resourceId) {
+        return $$(xpath("//*[@resource-id='" + resourceId + "']"));
+    }
+
+
+    /**
+     * Метод для обращения по className
+     *
+     * @param className
+     * @return
+     */
+    public static SelenideAppiumElement elementByClass(String className) {
+        return $x("//" + className);
+    }
+
+    /**
+     * Метод для обращения по коллекции className
+     *
+     * @param className
+     * @return
+     */
+    public static SelenideAppiumCollection collectionByClass(String className) {
+        return $$(xpath("//" + className));
+    }
+
+    /**
+     * Метод для обращения по xpath(text)
+     *
+     * @param text
+     * @return
+     */
+    public static SelenideAppiumElement elementByXpathText(String text) {
+        return $x("//*[@text='" + text + "']");
+    }
+
+    /**
+     * Метод для обращения по коллекции xpath(text)
+     *
+     * @param text
+     * @return
+     */
+    public static SelenideAppiumCollection collectionByXpathText(String text) {
+        return $$(xpath("//*[@text='" + text + "']"));
+    }
+
+    /**
+     * Метод для обращения по xpath(contentDesc)
+     *
+     * @param contentDesc
+     * @return
+     */
+    public static SelenideAppiumElement elementByContentDesc(String contentDesc) {
+        return $x("//*[@content-desc='" + contentDesc + "']");
+    }
+
+    /**
+     * Метод для обращения по коллекции content-desc
+     *
+     * @param contentDesc
+     * @return
+     */
+    public static SelenideAppiumCollection collectionByContentDesc(String contentDesc) {
+        return $$(xpath("//*[@content-desc='" + contentDesc + "']"));
+    }
+
+    /**
+     * Метод для обращения по id
+     *
+     * @param id
+     * @return
+     */
+    public static SelenideAppiumElement elementById(String id) {
+        return $(By.id(id));
+    }
 }

@@ -1,7 +1,10 @@
 package config;
-// Интерфейс для чтения настроек из файла emulator.properties
+
 import org.aeonbits.owner.Config;
 
+/**
+ * Чтение ключей из emulator.properties
+ */
 @Config.LoadPolicy(Config.LoadType.MERGE)
 @Config.Sources({ //Указываем, что читаем properties и то, что находится в файле emulator.properties
         "system:properties", //означает, что на вход подаются настройки, если мы запускаем внешние аргументы
@@ -9,23 +12,24 @@ import org.aeonbits.owner.Config;
 })
 
 public interface EmulatorConfig extends Config{
+    //достаем значения по ключу
     @Key("deviceName")
-    String deviceName();//метод для обозначения по ключу
+    String deviceName();
 
     @Key("platformName")
-    String platformName();//метод для обозначения по ключу
+    String platformName();
 
     @Key("appPackage")
-    String appPackage();//метод для обозначения по ключу
+    String appPackage();
 
     @Key("appActivity")
-    String appActivity();//метод для обозначения по ключу
+    String appActivity();
 
     @Key("app")
-    String app();//метод для обозначения по ключу
+    String app();
 
     @Key("remoteURL")
-    String remoteURL();//метод для обозначения по ключу
+    String remoteURL();
 
     @Key("automationName")
     String automationName();

@@ -162,14 +162,15 @@ public class ClientsPage {
         return this;
     }
 
-    @Step("Создание клиента c номером телефона")
-    public ClientsPage createClientWithPhone(String numberCard, String name, String surname, String patronymic, String phone) {
+    @Step("Создание клиента c заполненными номер карты, имя, фамилия, отчество, дата рождения, телефон")
+    public ClientsPage createClientRandom(String numberCard, String name, String surname, String patronymic, String birthDay, String phone) {
         getBtnPlus().should(visible, Duration.ofSeconds(5)).click();
         getBtnAddNewClient().should(visible).click();
         getFormCreateClientFields().first().sendKeys(numberCard);
         getFormCreateClientFields().get(1).sendKeys(name);
         getFormCreateClientFields().get(2).sendKeys(surname);
         getFormCreateClientFields().get(3).sendKeys(patronymic);
+        getFormCreateClientFields().get(4).sendKeys(birthDay);
         getFormCreateClientFields().get(5).sendKeys(phone);
         btnCreateClient.click();
         return this;

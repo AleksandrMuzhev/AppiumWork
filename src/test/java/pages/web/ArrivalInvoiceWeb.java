@@ -11,25 +11,25 @@ import org.openqa.selenium.By;
 import io.qameta.allure.Step;
 
 /**
- * Страница Товары в браузере
+ * Страница Поступление товаров в браузере
  */
-public class CommodityPageWeb {
+public class ArrivalInvoiceWeb {
     private final SelenideAppiumElement titlePage = $(By.cssSelector("div.content-title"));
     private final SelenideAppiumElement submitFilter = $(By.cssSelector(".ibutton_svg-filter"));
-    private final SelenideAppiumElement nameType = $(By.cssSelector("input[title='Наименование/артикул']"));
+    private final SelenideAppiumElement nameType = $(By.cssSelector("input[title='Контрагент']"));
     private final SelenideAppiumElement btnEnter = $(By.cssSelector("button.ibutton_outline"));
-    private final SelenideAppiumElement commodityName = $(By.cssSelector("tr:nth-child(1) > td:nth-child(3) span > span"));
+    private final SelenideAppiumElement counterParty = $(By.cssSelector("tr.checkable.ng-scope.r1 > td:nth-child(5)"));
 
-    public CommodityPageWeb() {
+    public ArrivalInvoiceWeb() {
         titlePage.shouldBe(visible);
     }
 
-    @Step("Проверяем добавленный товар в справочнике браузера")
-    public CommodityPageWeb checkCommodityVisible(String name) {
+    @Step("Проверяем добавленный документ поступления в справочнике браузера")
+    public ArrivalInvoiceWeb checkArrivalInvoice(String name) {
         submitFilter.click();
         nameType.sendKeys(name);
         btnEnter.click();
-        commodityName.shouldHave(text(name));
+        counterParty.shouldHave(text(name));
         return this;
     }
 }

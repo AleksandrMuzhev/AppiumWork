@@ -11,22 +11,20 @@ import org.openqa.selenium.By;
 import io.qameta.allure.Step;
 
 /**
- * Страница Услуги в браузере
+ * Страница Склады в браузере
  */
-public class ServicePageWeb {
+public class StoragePageWeb {
     private final SelenideAppiumElement titlePage = $(By.cssSelector("div.content-title"));
-    private final SelenideAppiumElement submitFilter = $(By.cssSelector(".ibutton_svg-filter"));
-    private final SelenideAppiumElement nameType = $(By.cssSelector("input[title='Наименование']"));
+    private final SelenideAppiumElement nameType = $(By.cssSelector("input[title='Название']"));
     private final SelenideAppiumElement btnEnter = $(By.cssSelector("button.ibutton_outline"));
     private final SelenideAppiumElement serviceName = $(By.cssSelector("tr:nth-child(1) > td:nth-child(3) span > span"));
 
-    public ServicePageWeb() {
+    public StoragePageWeb() {
         titlePage.shouldBe(visible);
     }
 
-    @Step("Проверяем добавленную услугу в справочнике браузера")
-    public ServicePageWeb checkServiceVisible(String name) {
-        submitFilter.click();
+    @Step("Проверяем добавленный склад в справочнике браузера")
+    public StoragePageWeb checkStorageVisible(String name) {
         nameType.sendKeys(name);
         btnEnter.click();
         serviceName.shouldHave(text(name));

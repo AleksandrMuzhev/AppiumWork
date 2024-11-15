@@ -94,55 +94,55 @@ public class DateHelper {
                 LocalDate.now().getYear();
     }
 
-    //Текущий день предыдущего месяца с сокращенным днем недели (Например, Сб 6 июля 2024)
+    //Текущий день предыдущего месяца с сокращенным днем недели (Например, Сб 6 июля 24)
     public static String dayOfMonthPrev() {
         return dayOfWeekForPreviousMonth(LocalDate.now(), new Locale("ru")) + " " +
                 LocalDate.now().getDayOfMonth() + " " +
                 LocalDate.now().minusMonths(1).getMonth().getDisplayName(TextStyle.FULL, new Locale("ru")) + " " +
-                LocalDate.now().getYear();
+                String.valueOf(LocalDate.now().getYear()).substring(2);
     }
 
-    //Текущий день следующего месяца с сокращенным днем недели (Например, Пт 6 сентября 2024)
+    //Текущий день следующего месяца с сокращенным днем недели (Например, Пт 6 сентября 24)
     public static String dayOfMonthNext() {
         return dayOfWeekForNextMonth(LocalDate.now(), new Locale("ru")) + " " +
                 LocalDate.now().getDayOfMonth() + " " +
                 LocalDate.now().plusMonths(1).getMonth().getDisplayName(TextStyle.FULL, new Locale("ru")) + " " +
-                LocalDate.now().getYear();
+                String.valueOf(LocalDate.now().getYear()).substring(2);
     }
 
-    //Дата предыдущего дня с сокращенным днем недели (Например, Пн 5 августа 2024)
+    //Дата предыдущего дня с сокращенным днем недели (Например, Пн 5 августа 24)
     public static String dateOfDayPrev() {
         return dayOfWeekForPreviousDay(LocalDate.now(), new Locale("ru")) + " " +
                 LocalDate.now().minusDays(1).getDayOfMonth() + " " +
                 LocalDate.now().minusDays(1).getMonth().getDisplayName(TextStyle.FULL, new Locale("ru")) + " " +
-                LocalDate.now().getYear();
+                String.valueOf(LocalDate.now().getYear()).substring(2);
     }
 
-    //Дата текущего дня с сокращенным днем недели (Например, Пн 6 августа 2024)
+    //Дата текущего дня с сокращенным днем недели (Например, Пн 6 августа 24)
     public static String dateCurrentFull() {
         return dayOfWeekForPreviousDay(LocalDate.now(), new Locale("ru")) + " " +
                 LocalDate.now().getDayOfMonth() + " " +
                 LocalDate.now().getMonth().getDisplayName(TextStyle.FULL, new Locale("ru")) + " " +
-                LocalDate.now().getYear();
+                String.valueOf(LocalDate.now().getYear()).substring(2);
     }
 
-    //Дата следующего дня с сокращенным днем недели (Например, Ср 7 августа 2024)
+    //Дата следующего дня с сокращенным днем недели (Например, Ср 7 августа 24)
     public static String dateOfDayNext() {
         return dayOfWeekForNextDay(LocalDate.now(), new Locale("ru")) + " " +
                 LocalDate.now().plusDays(1).getDayOfMonth() + " " +
                 LocalDate.now().plusDays(1).getMonth().getDisplayName(TextStyle.FULL, new Locale("ru")) + " " +
-                LocalDate.now().getYear();
+                String.valueOf(LocalDate.now().getYear()).substring(2);
     }
 
 
     /**
-     * Метод для генерации даты в формате MMMM yyyy (Например, Август 2024)
+     * Метод для генерации даты в формате MMMM yyyy (Например, Август 24)
      *
      * @return
      */
     public static String monthWithYear() {
         return MONTH_NAMES[LocalDate.now().getMonth().getValue() - 1] + " " +
-                LocalDate.now().getYear();
+                String.valueOf(LocalDate.now().getYear()).substring(2);
     }
 
     /**
@@ -154,7 +154,7 @@ public class DateHelper {
 
 
     /**
-     * Метод для генерации диапазона текущей недели (Например, 29 июля - 04 августа 2024)
+     * Метод для генерации диапазона текущей недели (Например, 29 - 04 августа 24)
      */
     public static String rangeDateCurrentWeek() {
         LocalDate currentDate = LocalDate.now();
@@ -164,7 +164,7 @@ public class DateHelper {
         LocalDate endOfWeek = currentDate.plusDays(7 - dayOfWeek); // воскресенье
 
         DateTimeFormatter formatterFrom = DateTimeFormatter.ofPattern("dd", new Locale("ru"));
-        DateTimeFormatter formatterTo = DateTimeFormatter.ofPattern("dd MMMM uuuu", new Locale("ru"));
+        DateTimeFormatter formatterTo = DateTimeFormatter.ofPattern("dd MMMM uu", new Locale("ru"));
 
         String formattedStartOfWeek = startOfWeek.format(formatterFrom);
         String formattedEndOfWeek = endOfWeek.format(formatterTo);

@@ -12,6 +12,8 @@ import com.codeborne.selenide.appium.SelenideAppiumElement;
 
 import org.openqa.selenium.By;
 
+import io.qameta.allure.Step;
+
 /**
  * Страница расписания в браузере
  */
@@ -26,6 +28,7 @@ public class SchedulePageWeb {
         linkTitleMenu.get(0).shouldBe(visible);
     }
 
+    @Step("Переход в справочников клиентов")
     public ClientInfoWeb goToClientInfo() {
         salesLink.click();
         if(arnica) {

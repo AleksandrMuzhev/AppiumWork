@@ -207,10 +207,10 @@ public class SchedulePage {
     }
 
     @Step("Нажимаем на Новый визит в кнопке Плюс из Расписания")
-    public DateVisit clickOnNewVisitInBtnPlus() {
+    public DateVisitPage clickOnNewVisitInBtnPlus() {
         getBtnPlus().should(visible, Duration.ofSeconds(5)).click();
         btnNewVisit.should(visible).click();
-        return new DateVisit();
+        return new DateVisitPage();
     }
 
     @Step("Нажимаем на Добавление сотрудника в кнопке Плюс из Расписания")
@@ -241,9 +241,8 @@ public class SchedulePage {
     }
 
     @Step("Тянем страницу Расписания для обновления")
-    public SchedulePage updateScheduleSwipe() {
+    public void updateScheduleSwipe() {
         swipe(mainContentForSwipe, "down", 50);
-        return this;
     }
 
 

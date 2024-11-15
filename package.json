@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "appium": "^2.11.3"
-  },
-  "devDependencies": {
-    "appium-gestures-plugin": "^4.0.1",
-    "appium-uiautomator2-driver": "^3.7.8"
-  }
-}

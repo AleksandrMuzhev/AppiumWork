@@ -8,6 +8,7 @@ import com.codeborne.selenide.appium.SelenideAppiumElement;
 import org.openqa.selenium.By;
 
 import helper.DataHelper;
+import io.qameta.allure.Step;
 
 /**
  * Страница авторизации "root" в браузере
@@ -22,6 +23,7 @@ public class LoginPageWeb {
         titleText.shouldBe(visible);
     }
 
+    @Step("заполнение формы логина зарегистрированными данными и переход в админку")
     public RootPageWeb validLogin() {
         var autoInfo = DataHelper.getUserInfoWeb();
         loginType.sendKeys(autoInfo.getLogin());

@@ -16,7 +16,7 @@ import java.time.Duration;
 import io.qameta.allure.Step;
 import lombok.Getter;
 
-public class DateVisit {
+public class DateVisitPage {
 
     /**
      * Элементы календаря перед созданием Визита для Android Арника
@@ -24,12 +24,12 @@ public class DateVisit {
     private SelenideAppiumElement btnBackDateVisit = elementByContentDesc("назад");
     @Getter
     private SelenideAppiumElement textTitleCalendarVisit = elementByXpathText("Дата посещения");
-    private SelenideAppiumElement textSelectDateVisit = elementByXpathText("Выберите дату\"]");
+    private SelenideAppiumElement textSelectDateVisit = elementByXpathText("Выберите дату");
     private SelenideAppiumElement btnToDayDateVisit = elementByContentDesc("сегодня");
     private SelenideAppiumCollection dayNamesSchedule = collectionByXpath("//android.view.ViewGroup[@resource-id=\"undefined.item_\"" + yearWithMonthValue() + "\".header.dayNames\"]");
     private SelenideAppiumElement numberDayCalendar = elementByXpath("(//android.widget.TextView[@text=\"" + dayOfMonth() + "\"])[1]");
 
-    public DateVisit() {
+    public DateVisitPage() {
         textTitleCalendarVisit.shouldBe(visible, Duration.ofSeconds(5));
     }
 

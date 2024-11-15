@@ -16,6 +16,10 @@ import pages.web.LoginPageWeb;
  */
 public class WebDriverHelper {
 
+    //Приватный конструктор, который предотвращает создание экземпляров.
+    private WebDriverHelper() {
+    }
+
     public static LoginPageWeb setWebDriver() {
         SelenideConfig config = new SelenideConfig().browser("chrome").browserSize("1680x1050");
         SelenideDriver driver = new SelenideDriver(config);

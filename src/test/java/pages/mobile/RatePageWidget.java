@@ -31,9 +31,9 @@ public class RatePageWidget {
                 goBack();
             }
         } else if (sqns) {
-            if (btnRemember.exists()){
+//            if (btnRemember.exists()){
                 btnRemember.should(visible, Duration.ofSeconds(20)).click();
-            }
+//            }
         }
         return new StatisticPage();
     }

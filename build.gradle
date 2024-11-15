@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.9.6'
+    id("io.qameta.allure") version "2.9.6"
 }
 
 group = 'ru.ittechnology'
@@ -14,16 +14,18 @@ tasks.withType(JavaCompile) {
     options.release = 17
 }
 
-def allureVersion = '2.29.0', //Для урегулирования конфликта версий в зависимостях в случае их доп-я
+//Для урегулирования конфликта версий в зависимостях в случае их доп-я
+def allureVersion = '2.13.9',
     junitVersion = '5.8.2',
-//    slf4jVersion = '1.7.32',
-    cucumberVersion = '7.18.1'
+    slf4jVersion = '1.7.32',
+    cucumberVersion = '7.3.2'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    implementation 'com.github.sarxos:ffmpeg:0.11.1' // для захвата видео в тестах
     implementation 'com.github.javafaker:javafaker:1.0.2'
     implementation 'com.codeborne:selenide-appium:7.4.2' //для использования инструментов взаимодействия в тестах + для подключения к appium-server и настройки связи с вашим кодом
     runtimeOnly 'org.aspectj:aspectjweaver:1.9.8'
@@ -36,10 +38,11 @@ dependencies {
             "io.cucumber:cucumber-junit-platform-engine:$cucumberVersion",
             "io.cucumber:cucumber-java:$cucumberVersion",
             "org.junit.platform:junit-platform-suite:1.10.0",
-            "com.github.romankh3:image-comparison:4.4.0"
+            "com.github.romankh3:image-comparison:4.4.0",
+            "io.qameta.allure:allure-cucumber5-jvm:$allureVersion" // Для интеграции Cucumber с Allure
     )
     testRuntimeOnly(
-//            "org.slf4j:slf4j-simple:$slf4jVersion", //для логирования
+            "org.slf4j:slf4j-simple:$slf4jVersion", //для логирования
             "org.junit.jupiter:junit-jupiter-engine:$junitVersion" //для работы всех тестов
     )
     testCompileOnly 'org.projectlombok:lombok:1.18.34'
@@ -70,8 +73,10 @@ task runCucumberTests(type: Test) {
     classpath = sourceSets.test.runtimeClasspath
 
     // путь к фиче-файлам
-    systemProperty 'cucumber.features', file('src/test/resources/features').absolutePath
-
+//    systemProperty 'cucumber.features', file('src/test/resources/features').absolutePath
+    // путь к определенному фиче-файлу
+    systemProperty 'cucumber.features', file('src/test/resources/features/auth1.feature')
+    
     // путь к glue-коду
     systemProperty 'cucumber.glue', 'steps' // пакет с step definitions
 

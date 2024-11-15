@@ -7,11 +7,13 @@ import com.codeborne.selenide.appium.SelenideAppiumElement;
 
 import org.openqa.selenium.By;
 
+import io.qameta.allure.Step;
+
 /**
  * Страница админки в браузере
  */
 public class RootPageWeb {
-    //    private final String employee = DataHelper.getUserInfoWeb().getUser();
+    private SelenideAppiumElement employeeLink;
     private final SelenideAppiumElement titleText = $(By.cssSelector("h1"));
     private final SelenideAppiumElement searchField = $(By.cssSelector("input[title=\"Что-нибудь - название, имя, емэйл\"]"));
     private final SelenideAppiumElement submit = $(By.cssSelector("div.field.search-submit-button > button"));
@@ -21,9 +23,10 @@ public class RootPageWeb {
         titleText.shouldBe(visible);
     }
 
-    public SchedulePageWeb goToEmployee(String email, String nameEmployee) {
-        SelenideAppiumElement employeeLink = $(By.linkText(nameEmployee));
-        searchField.sendKeys(email);
+    @Step("Переход из админки на главную страницу акаунта пользователя")
+    public SchedulePageWeb goToEmployee(String searchText, String nameEmployee) {
+        employeeLink = $(By.linkText(nameEmployee));
+        searchField.sendKeys(searchText);
         submit.click();
         employeeLink.click();
         return new SchedulePageWeb();

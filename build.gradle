@@ -73,9 +73,9 @@ task runCucumberTests(type: Test) {
     classpath = sourceSets.test.runtimeClasspath
 
     // путь к фиче-файлам
-//    systemProperty 'cucumber.features', file('src/test/resources/features').absolutePath
+    systemProperty 'cucumber.features', file('src/test/resources/features').absolutePath
     // путь к определенному фиче-файлу
-    systemProperty 'cucumber.features', file('src/test/resources/features/auth1.feature')
+//    systemProperty 'cucumber.features', file('src/test/resources/features/auth1.feature')
     
     // путь к glue-коду
     systemProperty 'cucumber.glue', 'steps' // пакет с step definitions

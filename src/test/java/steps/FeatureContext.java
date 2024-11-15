@@ -77,8 +77,8 @@ import pages.web.WaybillWeb;
 import pages.web.WriteOffWeb;
 
 public class FeatureContext extends EmulatorDriver {
-    private VideoRecorder videoRecorder;
-    private boolean testFailed;
+//    private VideoRecorder videoRecorder;
+//    private boolean testFailed;
     private static boolean isSetupDone = false;
     Long numberCard = DataHelper.getUserInfo().getNumberCard();
     String name = DataHelper.getUserInfo().getName();
@@ -160,22 +160,22 @@ public class FeatureContext extends EmulatorDriver {
         driver = null;
         isSetupDone = false;
 
-        videoRecorder.stopRecording();
-        if (testFailed) {
-            attachVideo(); // Присоединение видео к отчету только при падении теста
-        }
+//        videoRecorder.stopRecording();
+//        if (testFailed) {
+//            attachVideo(); // Присоединение видео к отчету только при падении теста
+//        }
     }
 
-    @Attachment(value = "Test video", type = "video/mp4")
-    public byte[] attachVideo() {
-        Path path = Paths.get("output/video.mp4");
-        try {
-            return Files.readAllBytes(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new byte[0];
-        }
-    }
+//    @Attachment(value = "Test video", type = "video/mp4")
+//    public byte[] attachVideo() {
+//        Path path = Paths.get("output/video.mp4");
+//        try {
+//            return Files.readAllBytes(path);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return new byte[0];
+//        }
+//    }
 
     @Допустим("открываю браузер")
     @Step("открываю браузер")

@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.sarxos:ffmpeg:0.11.1' // для захвата видео в тестах
+//    implementation 'com.github.sarxos:ffmpeg:0.11.1' // для захвата видео в тестах
     implementation 'com.github.javafaker:javafaker:1.0.2'
     implementation 'com.codeborne:selenide-appium:7.4.2' //для использования инструментов взаимодействия в тестах + для подключения к appium-server и настройки связи с вашим кодом
     runtimeOnly 'org.aspectj:aspectjweaver:1.9.8'

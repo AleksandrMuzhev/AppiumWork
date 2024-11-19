@@ -14,11 +14,8 @@ import static helper.RunHelper.runHelper;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
+import com.codeborne.selenide.logevents.SelenideLogger;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -29,14 +26,16 @@ import driver.WebDriverHelper;
 import helper.DataHelper;
 import io.appium.java_client.AppiumDriver;
 import io.cucumber.java.After;
+import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.ru.Допустим;
 import io.cucumber.java.ru.Затем;
 import io.cucumber.java.ru.И;
 import io.cucumber.java.ru.Пусть;
 import io.cucumber.java.ru.Тогда;
-import io.qameta.allure.Attachment;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import listeners.VideoRecorder;
+import io.qameta.allure.selenide.AllureSelenide;
 import pages.mobile.AddCommodity;
 import pages.mobile.AuthPage;
 import pages.mobile.BookingSettingPage;
@@ -77,7 +76,7 @@ import pages.web.WaybillWeb;
 import pages.web.WriteOffWeb;
 
 public class FeatureContext extends EmulatorDriver {
-//    private VideoRecorder videoRecorder;
+    //    private VideoRecorder videoRecorder;
 //    private boolean testFailed;
     private static boolean isSetupDone = false;
     Long numberCard = DataHelper.getUserInfo().getNumberCard();
@@ -136,6 +135,23 @@ public class FeatureContext extends EmulatorDriver {
         executeBash("adb -s shell settings put global animator_duration_scale 0.0"); //Отключаем длительность этой анимации
     }
 
+    public static void setUpAll() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+    }
+
+    public static void tearDownAll() {
+        SelenideLogger.removeListener("allure");
+    }
+
+    @Before
+    public void setUp(Scenario scenario) {
+        // Добавляем слушателя Allure для Selenide
+        setUpAll();
+
+        // Логируем начало теста
+        Allure.step("Запуск теста: " + scenario.getName());
+    }
+
     @Допустим("открываю приложение")
     @Step("открываю приложение")
     public void setUp() {
@@ -153,9 +169,20 @@ public class FeatureContext extends EmulatorDriver {
     }
 
     @Затем("закрываю приложение")
-    @After
     @Step("закрываю приложение")
-    public void tearDown() {
+    @After
+    public void tearDown(Scenario scenario) {
+        // Логируем результат теста
+        if (scenario.isFailed()) {
+            Allure.step("Тест провален: " + scenario.getName());
+            // Логика для захвата скриншотов или других данных
+        } else {
+            Allure.step("Тест завершен успешно: " + scenario.getName());
+        }
+
+        // Удаляем слушателя Allure для Selenide
+        tearDownAll();
+
         driver.quit();
         driver = null;
         isSetupDone = false;

@@ -30,7 +30,7 @@ public class DataHelper {
      */
     public static String LOGIN_ARNICA = "filter-495@arnica.pro";
     public static String PASSWORD_ARNICA = "12345qwert";
-    public static String LOGIN_SQNS = "filter-4717@arnica.pro";
+    public static String LOGIN_SQNS = "filter-30431@arnica.pro";
     public static String PASSWORD_SQNS = "qwe123";
 
     /**

@@ -27,7 +27,8 @@ public class ApkInfoHelper {
             throw new RuntimeException("No value for key 'app' providing apk path in emulator.properties");
         }
         try {
-            String pathToAapt = "C:\\Users\\user\\AppData\\Local\\Android\\Sdk\\build-tools\\34.0.0";
+            String userHome = System.getProperty("user.home");
+            String pathToAapt = userHome + "\\AppData\\Local\\Android\\Sdk\\build-tools\\34.0.0";
             apkInfo = executeSh(pathToAapt + "\\aapt dumb badging " + ConfigReader.emulatorConfig.app()); //Извлекаем скрипт через CMD в случае с Windows: указываем pathToAapt, далее aapt dumb badging читает AndroidManifest, берет нужные значения и записывает в переменную apkInfo
         } catch (IOException | InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
